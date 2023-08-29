@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Search By</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+
+<body style=" margin:0px auto; padding:2%;  background:#f2efef; font-family: Arial, Helvetica, sans-serif; color:#373447;">
+    <div style="background:#fff; border-radius:4px; width:100%; max-width: 600px;   margin:0px auto;">
+        <!--<div style="padding:30px 0px ; color:#f5e15e; text-align:center; font-size:24px;">
+                Opallios Staffing Management System
+        </div>-->
+        <div style="padding:20px; background: #fff; min-height:200px; ">
+             <table style=" margin-bottom:15px;">
+                 <tr>
+                     <td style="font-weight:bold;">Hi {{BDM_name}},</td>
+                 </tr>
+				 <tr>
+                     <td>Please check the attached resume and below details for the position of {{job_title}}</td>
+                 </tr>
+			</table>
+			 
+            <table style=" margin-bottom:15px;">
+                 <tr>
+                     <td width="200">Name</td>
+                     <td>{{candidate_info.first_name}} {{candidate_info.last_name}}</td>
+                 </tr>
+
+                 {% if candidate_info.primary_phone_number %}
+                 <tr>
+                     <td>Number</td>
+                     <td>{{candidate_info.primary_phone_number}}</td>
+                 </tr>
+                {% endif %}
+
+                {% if candidate_info.primary_email %}
+                 <tr>
+                     <td>Primary Email</td>
+                     <td>{{candidate_info.primary_email}}</td>
+                 </tr>
+                {% endif %}
+				
+				{% if candidate_info.min_salary or candidate_info.max_salary %}
+				{% if candidate_info.min_salary and candidate_info.max_salary %}
+				<tr>
+                     <td>Salary:</td>
+                     <td>${{candidate_info.min_salary}} - {{candidate_info.max_salary}}</td>
+                 </tr>
+				
+				{% elif candidate_info.min_salary %}
+				<tr>
+                     <td>Salary:</td>
+                     <td>${{candidate_info.min_salary}} - {{candidate_info.min_salary}}</td>
+                 </tr>
+				
+				{% elif candidate_info.max_salary %}
+				<tr>
+                     <td>Salary:</td>
+                     <td>${{candidate_info.max_salary}} - {{candidate_info.max_salary}}</td>
+                 </tr>
+				{% endif %}
+				{% endif %}
+
+                {% if candidate_info.min_rate or candidate_info.max_rate %}
+				{% if candidate_info.min_rate and candidate_info.max_rate %}
+				<tr>
+                     <td>Rate:</td>
+                     <td>${{candidate_info.min_rate}} - {{candidate_info.max_rate}}</td>
+                 </tr>
+				
+				{% elif candidate_info.min_rate %}
+				<tr>
+                     <td>Rate:</td>
+                     <td>${{candidate_info.min_rate}} - {{candidate_info.min_rate}}</td>
+                 </tr>
+				
+				{% elif candidate_info.max_rate %}
+				<tr>
+                     <td>Rate:</td>
+                     <td>${{candidate_info.max_rate}} - {{candidate_info.max_rate}}</td>
+                 </tr>
+				{% endif %}
+				{% endif %}
+
+                {% if candidate_info.current_location %}
+                 <tr>
+                     <td>Current Location</td>
+                     <td>{{candidate_info.current_location}}</td>
+                 </tr>
+                {% endif %}
+
+                {% if candidate_info.visa %}
+                 <tr>
+                     <td>Visa Status</td>
+                     <td>{{candidate_info.visa}}</td>
+                 </tr>
+                {% endif %}
+
+                {% if candidate_info.open_for_relocation %}
+                 <tr>
+                     <td>Open to relocation</td>
+                     <td>{{candidate_info.open_for_relocation}}</td>
+                 </tr>
+                {% endif %}
+
+                {% if candidate_info.total_experience %}
+                 <tr>
+                     <td>Total Experience</td>
+                     <td>{{candidate_info.total_experience}} yr</td>
+                 </tr>
+                {% endif %}
+
+                {% if candidate_info.qualification %}
+                 <tr>
+                     <td>Highest Degree</td>
+                     <td>{{candidate_info.qualification}}</td>
+                 </tr>
+                {% endif %}
+
+                 <!--<tr>
+                     <td>Availability to Start Project</td>
+                     <td>NA</td>
+                 </tr>-->
+
+                {% if candidate_info.total_experience_in_usa %}
+                 <tr>
+                     <td>Total US experience</td>
+                     <td>{{candidate_info.total_experience_in_usa}} yr</td>
+                 </tr>
+                {% endif %}
+
+                {% if candidate_info.any_offer_in_hand %}
+                 <tr>
+                     <td>Any offer/interview in hand</td>
+                     <td>{{candidate_info.any_offer_in_hand}} </td>
+                 </tr>
+                {% endif %}
+
+             </table>
+      
+			<table style=" margin-bottom:5px;">
+                 <tr>
+                     <td style="font-weight:bold;">Regards,</td>
+                 </tr>
+				 <tr>
+					 <td>{{sender_name}}</td>
+                 </tr>
+			</table>
+             
+             
+    </div>
+    </div>
+</body>
+
+</html>

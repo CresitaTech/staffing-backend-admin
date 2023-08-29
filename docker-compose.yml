@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "33060:3306"
+  web:
+    build: .
+    command: python manage.py test
+    volumes:
+      - .:/code
+    ports:
+      - "8080:8000"
+    depends_on:
+      - db
+    environment:
+      - DJANGO_READ_DOT_ENV_FILE=true
+      - DB_DEFAULT_NAME=django_dev
+      - DB_DEFAULT_USER=root
+      - DB_DEFAULT_PASSWORD=
+      - DB_DEFAULT_HOST=localhost
+      - DB_DEFAULT_PORT=33060
+      - DB_WEB_NAME=trulocal_web_dev
+      - LOG_LEVEL=DEBUG
+      - DEBUG=True
+      - DJANGO_DATABASE_URL=mysql://root@db:3306/django_dev
+      - WEB_DATABASE_URL=mysql://root@db:3306/trulocal_web_dev
+      - TRULOCAL_ENVIRONMENT=Local
+      - ENDPOINTS_URL=http://127.0.0.1:8001/
+      - ALLOWED_HOSTS=ec2-35-183-204-155.ca-central-1.compute.amazonaws.com',web.trulocalphoenix.com,127.0.0.1,trulocalusa.local

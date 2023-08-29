@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Search By</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+</head>
+
+<body style=" margin:0px auto; padding:2%;  background:#f2efef; font-family: Arial, Helvetica, sans-serif; color:#373447;">
+    <div style="background:#fff; border-radius:4px; width:100%; max-width: 600px;   margin:0px auto;">
+        <!--<div style="padding:30px 0px ; color:#f5e15e; text-align:center; font-size:24px;">
+                Opallios Staffing Management System
+        </div>-->
+        <div style="padding:20px; background: #fff; min-height:200px; ">
+             
+			 <table style=" margin-bottom:15px;">
+                 <tr>
+                     <td style="font-weight:bold;">Hello Team,</td>
+                 </tr>
+				 <tr>
+                     <td>New Candidate has contacted us:</td>
+                 </tr>
+			</table>	 
+            <table style=" margin-bottom:15px;">
+                 <tr>
+                     <td width="200">First Name</td>
+                     <td>{{first_name}}</td>
+                 </tr>
+
+                {% if last_name %}
+                 <tr>
+                     <td>Last Name</td>
+                     <td>{{last_name}}</td>
+                 </tr>
+                {% endif %}
+				
+				{% if job_title %}
+                 <tr>
+                     <td>Job Title</td>
+                     <td>{{job_title}}</td>
+                 </tr>
+                {% endif %}
+				
+				{% if date_of_birth %}
+                 <tr>
+                     <td>DOB</td>
+                     <td>{{date_of_birth}}</td>
+                 </tr>
+                {% endif %}
+
+                {% if qualification %}
+                 <tr>
+                     <td>Qualification</td>
+                     <td>{{qualification}}</td>
+                 </tr>
+                {% endif %}
+				
+				{% if primary_email %}
+                 <tr>
+                     <td>Primary Email</td>
+                     <td>{{primary_email}} </td>
+                 </tr>
+                {% endif %}
+				
+				{% if secondary_email %}
+                 <tr>
+                     <td>Secondary Email</td>
+                     <td>{{secondary_email}} </td>
+                 </tr>
+                {% endif %}
+				
+				{% if primary_phone_number %}
+                 <tr>
+                     <td>Primary Phone No</td>
+                     <td>{{primary_phone_number}}</td>
+                 </tr>
+                {% endif %}
+
+                {% if secondary_phone_number %}
+                 <tr>
+                     <td>Secondary Phone No</td>
+                     <td>{{secondary_phone_number}}</td>
+                 </tr>
+                {% endif %}
+				
+				{% if designation %}
+                 <tr>
+                     <td>Designation</td>
+                     <td>{{designation}} </td>
+                 </tr>
+                {% endif %}
+				
+				{% if salary_Rate %}
+                 <tr>
+                     <td>Salary/Rate</td>
+                     <td>{{salary_Rate}}</td>
+                 </tr>
+                {% endif %}
+
+                {% if visa %}
+                 <tr>
+                     <td>Visa</td>
+                     <td>{{visa}}</td>
+                 </tr>
+                {% endif %}
+				
+				{% if company_name %}
+                 <tr>
+                     <td>Company Name</td>
+                     <td>{{company_name}} </td>
+                 </tr>
+                {% endif %}
+				
+				{% if total_experience %}
+                 <tr>
+                     <td>Total Experience</td>
+                     <td>{{total_experience}} </td>
+                 </tr>
+                {% endif %}
+				
+				{% if total_exp_usa %}
+                 <tr>
+                     <td>Total Experience USA</td>
+                     <td>{{total_exp_usa}} </td>
+                 </tr>
+                {% endif %}
+				
+				{% if any_offer_in_hand %}
+                 <tr>
+                     <td>Any Offer In Hand</td>
+                     <td>{{any_offer_in_hand}} </td>
+                 </tr>
+                {% endif %}
+				
+				{% if current_location %}
+                 <tr>
+                     <td>Current Location</td>
+                     <td>{{current_location}} </td>
+                 </tr>
+                {% endif %}
+				
+				{% if skills1 %}
+                 <tr>
+                     <td>Skills 1</td>
+                     <td>{{skills1}} </td>
+                 </tr>
+                {% endif %}
+				
+				{% if skills2 %}
+                 <tr>
+                     <td>Skills 2</td>
+                     <td>{{skills2}} </td>
+                 </tr>
+                {% endif %}
+				
+				{% if remarks %}
+                 <tr>
+                     <td>Remarks</td>
+                     <td>{{remarks}} </td>
+                 </tr>
+                {% endif %}
+				
+             </table>
+			<table style=" margin-bottom:5px;">
+                 <tr>
+                     <td style="font-weight:bold;">Regards,</td>
+                 </tr>
+				 <tr>
+					 <td>Opallios Team</td>
+                 </tr>
+			</table>
+            
+    </div>
+    </div>
+</body>
+
+</html>

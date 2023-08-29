@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Job Description</title> 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+
+<body>
+    <div class="job-description-section">
+
+        {% if instance.job_title %}
+        <h2 class="text-center">Job Title:</h2>
+        <p>{{ instance.job_title}}</p>
+        {% endif %}
+
+		{% if instance.location %}
+        <h2 class="text-center">Job Location:</h2>
+        <p>{{ instance.location}}</p>
+		{% endif %}
+
+		{% if instance.client_name %}
+        <h2 class="text-center">Client Name:</h2>
+        <p>{{ instance.client_name}}</p>
+		{% endif %}
+
+        {% if instance.end_client_name %}
+        <h2 class="text-center">End Client Name:</h2>
+        <p>{{ instance.end_client_name}}</p>
+        {% endif %}
+
+        {% if instance.job_description %}
+        <h2 class="text-center">Job Description:</h2>
+        <p>{{ instance.job_description|safe}}</p>
+        {% endif %}
+
+        {% if instance.roles_and_responsibilities %}
+        <h2 class="text-center">Job Responsibilities:</h2>
+        <p>{{ instance.roles_and_responsibilities|safe}}</p>
+        {% endif %}
+
+        {% if instance.key_skills %}
+        <h2 class="text-center">Key Skills:</h2>
+        <p>{{ instance.key_skills}}</p>
+        {% endif %}
+
+        {% if instance.nice_to_have_skills %}
+        <h2 class="text-center">Nice to Have Skills:</h2>
+        <p>{{ instance.nice_to_have_skills}}</p>
+        {% endif %}
+
+        {% if instance.min_years_of_experience or instance.max_years_of_experience %}
+		
+		{% if instance.min_years_of_experience and instance.max_years_of_experience %}
+        <h2 class="text-center">Total Experience:</h2>
+        <p>${{instance.min_years_of_experience}} - {{instance.max_years_of_experience}}</p>
+		
+		{% elif instance.min_years_of_experience %}
+        <h2 class="text-center">Total Experience:</h2>
+        <p>${{instance.min_years_of_experience}} - {{instance.min_years_of_experience}}</p>
+		
+		{% elif instance.max_years_of_experience %}
+        <h2 class="text-center">Total Experience:</h2>
+        <p>${{instance.max_years_of_experience}} - {{instance.max_years_of_experience}}</p>
+        {% endif %}
+		
+		{% endif %}
+
+        {% if instance.industry_experience %}
+        <h2 class="text-center">Industry Experience:</h2>
+        <p>{{ instance.industry_experience}}</p>
+        {% endif %}
+
+        {% if instance.visa_type %}
+        <h2 class="text-center">Visa Type:</h2>
+        <p>{{ instance.visa_type}}</p>
+        {% endif %}
+
+        {% if instance.education_qualificaion %}
+        <h2 class="text-center">Basic Qualifications:</h2>
+        <p>{{ instance.education_qualificaion}}</p>
+        {% endif %}
+
+        {% if instance.key_fields %}
+        <h2 class="text-center">Job Key Fields:</h2>
+        <p>{{ instance.key_fields}}</p>
+        {% endif %}
+		
+		{% if instance.min_salary or instance.max_salary %}
+		
+		{% if instance.min_salary and instance.max_salary %}
+        <h2 class="text-center">Salary:</h2>
+        <p>${{instance.min_salary}} - {{instance.max_salary}}</p>
+		
+		{% elif instance.min_salary %}
+        <h2 class="text-center">Salary:</h2>
+        <p>${{instance.min_salary}} - {{instance.min_salary}}</p>
+		
+		{% elif instance.max_salary %}
+        <h2 class="text-center">Salary:</h2>
+        <p>${{instance.max_salary}} - {{instance.max_salary}}</p>
+        {% endif %}
+		
+		{% endif %}
+		
+        {% if instance.min_rate or instance.max_rate %}
+		
+		{% if instance.min_rate and instance.max_rate %}
+        <h2 class="text-center">Rate:</h2>
+        <p>${{instance.min_rate}} - {{instance.max_rate}}</p>
+		
+		{% elif instance.min_rate %}
+        <h2 class="text-center">Rate:</h2>
+        <p>${{instance.min_rate}} - {{instance.min_rate}}</p>
+		
+		{% elif instance.max_rate %}
+        <h2 class="text-center">Rate:</h2>
+        <p>${{instance.max_rate}} - {{instance.max_rate}}</p>
+        {% endif %}
+		
+		{% endif %}
+		
+		{% if instance.min_client_rate or instance.max_client_rate %}
+		
+		{% if instance.min_client_rate and instance.max_client_rate %}
+        <h2 class="text-center">Client Rate:</h2>
+        <p>${{instance.min_client_rate}} - {{instance.max_client_rate}}</p>
+		
+		{% elif instance.min_client_rate %}
+        <h2 class="text-center">Client Rate:</h2>
+        <p>${{instance.min_client_rate}} - {{instance.min_client_rate}}</p>
+		
+		{% elif instance.max_client_rate %}
+        <h2 class="text-center">Client Rate:</h2>
+        <p>${{instance.max_client_rate}} - {{instance.max_client_rate}}</p>
+        {% endif %}
+		
+		{% endif %}
+
+        {% if instance.employment_type %}
+        <h2 class="text-center">Employment Type:</h2>
+        <p>{{ instance.employment_type}}</p>
+        {% endif %}
+
+        {% if instance.contract_duration %}
+        <h2 class="text-center">Contract Duration:</h2>
+        <p>{{ instance.contract_duration}}</p>
+        {% endif %}
+
+        {% if instance.start_date %}
+        <h2 class="text-center">Start Date:</h2>
+        <p>{{ instance.start_date}}</p>
+        {% endif %}
+
+        {% if instance.no_of_requests %}
+        <h2 class="text-center">No.of Requests:</h2>
+        <p>{{ instance.no_of_requests}}</p>
+        {% endif %}
+
+        {% if instance.priority == true %}
+        <h2 class="text-center">Priority:</h2>
+        <p>High</p>
+        {% endif %}
+		
+		{% if instance.projected_revenue %}
+        <h2 class="text-center">Projected Revenue:</h2>
+        <p>{{ instance.projected_revenue}}</p>
+        {% endif %}
+		
+		{% if instance.revenue_frequqney %}
+        <h2 class="text-center">Revenue Frequency:</h2>
+        <p>{{ instance.revenue_frequqney}}</p>
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>

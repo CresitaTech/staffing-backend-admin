@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Search By</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<style>
+       
+        table,
+        td,
+        th {
+            font-size:15px;
+            text-align: left;
+            font-family: Arial, Helvetica, sans-serif;
+            line-height:20px;
+            color: #0c0e14;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table td{
+            background:#fff;
+        }
+        .table,
+        .table td,
+        .table th {
+            border: 1px solid #ddd;
+            padding:0px 5px;
+			height:30px;
+			line-height:30px;
+        }
+        .table th{
+            background:#f4f4f4;
+        }
+       
+    </style>
+</head>
+
+<body style=" margin:0px auto; padding:0px;  font-family: Arial, Helvetica, sans-serif; color:#0c0e14; background:#fff;">
+    <div style="background:#fff; border-radius:4px; width:100%; max-width: 100%;   margin:0px auto;">
+        <div style="padding:0px; background: #fff; min-height:100px; ">
+             <table style=" margin-bottom:10px;" width="100%" cellspacing="0" cellpedding="0" border="0">
+				 <tr>
+                     <td><strong>Hi All BDMs,</strong> </td>
+                 </tr>
+				 <tr>
+                     <td><strong> please check your jobs with their submissions and other status summary for the week.</td>
+                 </tr>
+			</table>
+			 
+            <table width="100%" cellspacing="0" cellpedding="0" border="1" style="margin-bottom:10px;  border: 1px solid #ddd;" >
+                <tr>
+				<th  align="left" style="padding:0px 5px; height:24px; line-height:24px; background:#f4f4f4; vertical-align: text-top;">BDM</th>
+				<th   style="padding:0px 5px; height:24px; line-height:24px; text-align: left; background:#f4f4f4; vertical-align: text-top;">Client</th>
+				<th   style="padding:0px 5px; height:24px; line-height:24px; text-align: left; background:#f4f4f4; vertical-align: text-top;">Job Title</th>
+				<th   style="padding:0px 5px; height:24px; line-height:24px; text-align: left; background:#f4f4f4; white-space: nowrap; vertical-align: text-top;">Posted Date</th>
+				<th   style="padding:0px 5px; height:24px; line-height:24px; text-align: center; background:#f4f4f4; white-space: nowrap; vertical-align: text-top;">Job Type</th>
+				<th   style="padding:0px 5px; height:24px; line-height:24px; text-align: center; background:#f4f4f4; white-space: nowrap; vertical-align: text-top;">Min Rate/ Salary</th>
+				<th   style="padding:0px 5px; height:24px; line-height:24px; text-align: center; background:#f4f4f4; white-space: nowrap; vertical-align: text-top;">Max Rate/ Salary</th>
+				<th   style="padding:0px 5px; height:24px; line-height:24px; text-align: center; background:#f4f4f4; white-space: nowrap; vertical-align: text-top;">Submission</th>
+				<th   style="padding:0px 5px; height:24px; line-height:24px; text-align: center; background:#f4f4f4; white-space: nowrap; vertical-align: text-top;">Send To Client</th>
+				<th   style="padding:0px 5px; height:24px; line-height:24px; text-align: center; background:#f4f4f4; white-space: nowrap; vertical-align: text-top;">Interview</th>
+				<th   style="padding:0px 5px; height:24px; line-height:24px; text-align: center; background:#f4f4f4; white-space: nowrap; vertical-align: text-top;">Rejected</th>
+				<th   style="padding:0px 5px; height:24px; line-height:24px; text-align: center; background:#f4f4f4; white-space: nowrap; vertical-align: text-top;">Shortlisted</th>
+				<th   style="padding:0px 5px; height:24px; line-height:24px; text-align: center; background:#f4f4f4; white-space: nowrap; vertical-align: text-top;">Offered</th>
+				<th   style="padding:0px 5px; height:24px; line-height:24px; text-align: center; background:#f4f4f4; white-space: nowrap; vertical-align: text-top;">Placed</th>
+                </tr>
+				{% if data|length %}
+				{% for item in data %}
+                 <tr>
+                     <td align="left" style="padding:0px 5px; height:24px; line-height:24px; vertical-align: text-top;">{{item.bdm_name}}</td>
+                     <td align="center" style="padding:0px 5px; height:24px; line-height:24px; text-align: left; vertical-align: text-top;">{{item.client_name}}</td>
+					 <td align="center" style="padding:0px 5px; height:24px; line-height:24px; text-align: left; vertical-align: text-top;">{{item.job_title}}</td>
+					 <td align="center" style="padding:0px 5px; height:24px; line-height:24px; text-align: left; vertical-align: text-top;">{{item.job_date}}</td>
+					 <td align="center" style="padding:0px 5px; height:24px; line-height:24px; text-align: center; vertical-align: text-top;">{{item.job_type}}</td>
+					 <td align="center" style="padding:0px 5px; height:24px; line-height:24px; text-align: center; vertical-align: text-top;"> {% if item.min_salary != None %}{{ item.min_salary }}{% else %}{{ item.min_rate }} {% endif %}</td>
+					 <td align="center" style="padding:0px 5px; height:24px; line-height:24px; text-align: center; vertical-align: text-top;"> {% if item.max_salary != None %}{{ item.max_salary }}{% else %}{{ item.max_rate }} {% endif %}</td>
+					 <td align="center" style="padding:0px 5px; height:24px; line-height:24px; text-align: center; vertical-align: text-top;"> {% if item.submission != None %}{{ item.submission }}{% else %}{{ 0 }} {% endif %}</td>
+					 <td align="center" style="padding:0px 5px; height:24px; line-height:24px; text-align: center; vertical-align: text-top;"> {% if item.send_out != None %}{{ item.send_out }}{% else %}{{ 0 }} {% endif %}</td>
+					 <td align="center" style="padding:0px 5px; height:24px; line-height:24px; text-align: center; vertical-align: text-top;">{% if item.client_interview != None %}{{ item.client_interview }}{% else %}{{ 0 }} {% endif %}</td>
+					 <td align="center" style="padding:0px 5px; height:24px; line-height:24px; text-align: center; vertical-align: text-top;">{% if item.sendout_reject != None %}{{ item.sendout_reject }}{% else %}{{ 0 }} {% endif %}</td>
+					 <td align="center" style="padding:0px 5px; height:24px; line-height:24px; text-align: center; vertical-align: text-top;">{% if item.shortlisted != None %}{{ item.shortlisted }}{% else %}{{ 0 }} {% endif %}</td>
+					 <td align="center" style="padding:0px 5px; height:24px; line-height:24px; text-align: center; vertical-align: text-top;">{% if item.offered != None %}{{ item.offered }}{% else %}{{ 0 }} {% endif %}</td>
+					 <td align="center" style="padding:0px 5px; height:24px; line-height:24px; text-align: center; vertical-align: text-top;">{% if item.placed != None %}{{ item.placed }}{% else %}{{ 0 }} {% endif %}</td>
+                 </tr>
+				{% endfor %}
+				
+				{% else %}
+				<tr>
+					<td colspan="3" style="text-align: center; color: #f20e0e; height:24px; line-height:24px;">No Records Found</td>
+                </tr>
+				{% endif %}
+			</table>
+        </div>
+    </div>
+</body>
+
+</html>

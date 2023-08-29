@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Search By</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+</head>
+
+<body style="margin:0px auto; padding:2%;  background:#f2efef; font-family: Arial, Helvetica, sans-serif; color:#373447;">
+    <div style="background:#fff; border-radius:4px; width:100%; max-width: 600px;   margin:0px auto;">
+        <!--<div style="padding:30px 0px ; color:#f5e15e; text-align:center; font-size:24px;">
+                Opallios Staffing Management System
+        </div>-->
+        <div style="padding:20px; background: #fff; min-height:200px; ">
+		<table style=" margin-bottom:15px;">
+                 <tr>
+                     <td style="font-weight:bold;">Hi {{default_assignee_name}},</td>
+                 </tr>
+				 <tr>
+                     <td>A new job created with following detaiils:</td>
+                 </tr>
+			</table>
+            
+             <table style=" margin-bottom:15px;">
+                 <tr>
+                     <td width="200">Job ID:</td>
+                     <td>{{job_id}}</td>
+                 </tr>
+
+                 {% if job_title %}
+                 <tr>
+                     <td>Job Title:</td>
+                     <td>{{job_title}}</td>
+                 </tr>
+                {% endif %}
+
+                {% if location %}
+                 <tr>
+                     <td>Location:</td>
+                     <td>{{location}}</td>
+                 </tr>
+                {% endif %}
+
+                {% if client_name %}
+                 <tr>
+                     <td>Client Name:</td>
+                     <td>{{client_name}}</td>
+                 </tr>
+                {% endif %}
+				
+				{% if min_salary or max_salary %}
+				{% if min_salary and max_salary %}
+				<tr>
+                     <td>Pay Rate:</td>
+                     <td>${{min_salary}} - {{max_salary}}</td>
+                 </tr>
+				
+				{% elif min_salary %}
+				<tr>
+                     <td>Pay Rate:</td>
+                     <td>${{min_salary}} - {{min_salary}}</td>
+                 </tr>
+				
+				{% elif max_salary %}
+				<tr>
+                     <td>Pay Rate:</td>
+                     <td>${{max_salary}} - {{max_salary}}</td>
+                 </tr>
+				{% endif %}
+				{% endif %}
+
+                {% if min_rate or max_rate %}
+				{% if min_rate and max_rate %}
+				<tr>
+                     <td>Pay Rate:</td>
+                     <td>${{min_rate}} - {{max_rate}}</td>
+                 </tr>
+				
+				{% elif min_rate %}
+				<tr>
+                     <td>Pay Rate:</td>
+                     <td>${{min_rate}} - {{min_rate}}</td>
+                 </tr>
+				
+				{% elif max_rate %}
+				<tr>
+                     <td>Pay Rate:</td>
+                     <td>${{max_rate}} - {{max_rate}}</td>
+                 </tr>
+				{% endif %}
+				{% endif %}
+				
+				{%  if status %}
+                 <tr>
+                     <td>Status</td>
+                     <td>{{status}}</td>
+                 </tr>
+                {% endif %}
+				
+				{%  if employment_type %}
+                 <tr>
+                     <td>Engagement Type:</td>
+                     <td>{{employment_type}}</td>
+                 </tr>
+                {% endif %}
+				
+				
+				{% if min_client_rate or max_client_rate %}
+				{% if min_client_rate and max_client_rate %}
+				<tr>
+                     <td>Bill Rate:</td>
+                     <td>${{min_client_rate}} - {{max_client_rate}}</td>
+                 </tr>
+				 
+				{% elif min_client_rate %}
+				<tr>
+                     <td>Bill Rate:</td>
+                     <td>${{min_client_rate}} - {{min_salary}}</td>
+                 </tr>
+				
+				{% elif max_client_rate %}
+				<tr>
+                     <td>Bill Rate:</td>
+                     <td>${{max_client_rate}} - {{max_client_rate}}</td>
+                 </tr>
+				{% endif %}
+				{% endif %}
+				
+				
+
+             </table>
+			 <table style=" margin-bottom:15px;">
+                 <tr>
+                     <td>For more details please check OSMS.</td>
+                 </tr>
+			</table>
+             <table style=" margin-bottom:5px;">
+                 <tr>
+                     <td style="font-weight:bold;">Best Regards,</td>
+                 </tr>
+				 <tr>
+					 <td>{{sender_name}}</td>
+                 </tr>
+			</table>
+        </div>
+    </div>
+</body>
+
+</html>

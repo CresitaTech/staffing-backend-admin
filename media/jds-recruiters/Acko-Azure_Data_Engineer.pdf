@@ -1,0 +1,328 @@
+%PDF-1.4
+%“Œ‹ž ReportLab Generated PDF document http://www.reportlab.com
+1 0 obj
+<<
+/F1 2 0 R /F2 3 0 R
+>>
+endobj
+2 0 obj
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
+endobj
+3 0 obj
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
+endobj
+4 0 obj
+<<
+/Contents 46 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 45 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+5 0 obj
+<<
+/Contents 47 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 45 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+6 0 obj
+<<
+/Contents 48 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 45 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+7 0 obj
+<<
+/Outlines 9 0 R /PageMode /UseNone /Pages 45 0 R /Type /Catalog
+>>
+endobj
+8 0 obj
+<<
+/Author () /CreationDate (D:20230725155035-05'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20230725155035-05'00') /Producer (xhtml2pdf <https://github.com/xhtml2pdf/xhtml2pdf/>) 
+  /Subject () /Title (Job Description) /Trapped /False
+>>
+endobj
+9 0 obj
+<<
+/Count 2 /First 10 0 R /Last 10 0 R /Type /Outlines
+>>
+endobj
+10 0 obj
+<<
+/Count -34 /Dest [ 4 0 R /Fit ] /First 11 0 R /Last 44 0 R /Parent 9 0 R /Title (Job Title:)
+>>
+endobj
+11 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 12 0 R /Parent 10 0 R /Title (Job Title:)
+>>
+endobj
+12 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 13 0 R /Parent 10 0 R /Prev 11 0 R /Title (Job Location:)
+>>
+endobj
+13 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 14 0 R /Parent 10 0 R /Prev 12 0 R /Title (Country:)
+>>
+endobj
+14 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 15 0 R /Parent 10 0 R /Prev 13 0 R /Title (Client Name:)
+>>
+endobj
+15 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 16 0 R /Parent 10 0 R /Prev 14 0 R /Title (Job Description:)
+>>
+endobj
+16 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 17 0 R /Parent 10 0 R /Prev 15 0 R /Title (Job Responsibilities:)
+>>
+endobj
+17 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 18 0 R /Parent 10 0 R /Prev 16 0 R /Title (Key Skills:)
+>>
+endobj
+18 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 19 0 R /Parent 10 0 R /Prev 17 0 R /Title (Nice to Have Skills:)
+>>
+endobj
+19 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 20 0 R /Parent 10 0 R /Prev 18 0 R /Title (Mandatory Skills:)
+>>
+endobj
+20 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 21 0 R /Parent 10 0 R /Prev 19 0 R /Title (Total Experience:)
+>>
+endobj
+21 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 22 0 R /Parent 10 0 R /Prev 20 0 R /Title (Industry Experience:)
+>>
+endobj
+22 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 23 0 R /Parent 10 0 R /Prev 21 0 R /Title (Salary:)
+>>
+endobj
+23 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 24 0 R /Parent 10 0 R /Prev 22 0 R /Title (Currency:)
+>>
+endobj
+24 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 25 0 R /Parent 10 0 R /Prev 23 0 R /Title (Employment Type:)
+>>
+endobj
+25 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 26 0 R /Parent 10 0 R /Prev 24 0 R /Title (Default Assignee:)
+>>
+endobj
+26 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 27 0 R /Parent 10 0 R /Prev 25 0 R /Title (Projected Revenue:)
+>>
+endobj
+27 0 obj
+<<
+/Dest [ 4 0 R /Fit ] /Next 28 0 R /Parent 10 0 R /Prev 26 0 R /Title (Revenue Frequency:)
+>>
+endobj
+28 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 29 0 R /Parent 10 0 R /Prev 27 0 R /Title (Status:)
+>>
+endobj
+29 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 30 0 R /Parent 10 0 R /Prev 28 0 R /Title (End Client Name:)
+>>
+endobj
+30 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 31 0 R /Parent 10 0 R /Prev 29 0 R /Title (Minimum Client Rate:)
+>>
+endobj
+31 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 32 0 R /Parent 10 0 R /Prev 30 0 R /Title (Minimum Client Rate:)
+>>
+endobj
+32 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 33 0 R /Parent 10 0 R /Prev 31 0 R /Title (Priority:)
+>>
+endobj
+33 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 34 0 R /Parent 10 0 R /Prev 32 0 R /Title (Educational Qualification:)
+>>
+endobj
+34 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 35 0 R /Parent 10 0 R /Prev 33 0 R /Title (Start Date:)
+>>
+endobj
+35 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 36 0 R /Parent 10 0 R /Prev 34 0 R /Title (Contract Duration:)
+>>
+endobj
+36 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 37 0 R /Parent 10 0 R /Prev 35 0 R /Title (Employment Type Description:)
+>>
+endobj
+37 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 38 0 R /Parent 10 0 R /Prev 36 0 R /Title (Notice period acceptable:)
+>>
+endobj
+38 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 39 0 R /Parent 10 0 R /Prev 37 0 R /Title (Interview process/Mode of interview :)
+>>
+endobj
+39 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 40 0 R /Parent 10 0 R /Prev 38 0 R /Title (Number of openings :)
+>>
+endobj
+40 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 41 0 R /Parent 10 0 R /Prev 39 0 R /Title (Mode of work: )
+>>
+endobj
+41 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 42 0 R /Parent 10 0 R /Prev 40 0 R /Title (Key Fields: )
+>>
+endobj
+42 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 43 0 R /Parent 10 0 R /Prev 41 0 R /Title (No of Requests: )
+>>
+endobj
+43 0 obj
+<<
+/Dest [ 5 0 R /Fit ] /Next 44 0 R /Parent 10 0 R /Prev 42 0 R /Title (Visa Type: )
+>>
+endobj
+44 0 obj
+<<
+/Dest [ 6 0 R /Fit ] /Parent 10 0 R /Prev 43 0 R /Title (Job Posted Date: )
+>>
+endobj
+45 0 obj
+<<
+/Count 3 /Kids [ 4 0 R 5 0 R 6 0 R ] /Type /Pages
+>>
+endobj
+46 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 929
+>>
+stream
+GauI6?#SFN'Sc)P($D;-)cBskgY#jkaO[I\.n&Z6Pm4^=)\SU#DX?!$U"qP*_D3>bJLF,%IX05Dhq&"8437,cXT73*E"Wg,'TsCX*-"Np@@E,r7MkJ[T"duW@U*p[.T/f,mNPm6o9d<JH+JX8'S7k10lfKPrf.^:8g6t4,V'uGBs*`b#!.TTpP_ts%?ItgFUN+OQe.>O-9(DM6?3=Q\<D$>Q#s8uQkF9F8p1P?Qk;:$$Xp%K]N%B3I?m:Vh%tB4J$kPm8_Tso/T,E69GK*P?pkj_Y<_HebgOLs76!-hWl[+;#234b/1VC8"]H\Bg0MLC3.340U8^&eLnr#rCJVhiMTD[2;M7:PZea0sM,8(adD.;=L!Ms)>k+bjaUakhfmOa>"=qDnoGS+e`7.q$f6bb%TfJ!`VooSP2'+Cth(]rUlOa_LJ+Y["Vn&eYAPq2tS(krO3h.'dLddoL5D[um#;(rPj7--R+@6\3GtgNM^6f?\mVSPNUZ1!mPBsh?+B48DZA@OK/Wq@?1REP=c"q!b.H+5%B_KHb.AG8>r<M;mSB`eNo3a.<+lY;HIW0^0Me1V,e_[FI,$.N%<5=CI*-CXW0eu)Dk;W@T9$/L*@JY%^.d)Xk\0!KoMTLS[<_$F*J7B]SRc%RFPToI8Spld37+9^>@/UTn)F[2qTsBsoQD*(laQGM\OBSH*\jm=._UX\U'sWc)mTr\;7K6TtCSMM2525<NRC6,W)JTdpfN"(FQ*u^uB#1N0;%[8$Vs/u`FLBE;c)StUa^uPWo8&K!l_,M'gu`lk=2A*,_?eRRX6Bl?`8%/*hS<i2gKV.`&#Y+e1!*6@l_CRur>eY8=f-=FfMGRcB0i*M$r-+n<Sj.F0hW>H+&1/NYt633$)%TmNJn5tgkiRO+'Xt#.P?H^\t3%j>a^@jpDO72hrZ.3[K~>endstream
+endobj
+47 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 917
+>>
+stream
+Gb!$FgJ6Kg&;KZF'Q_r.mBB+L\p#_te.]24<k1-6!aC&h#E[i7FeG["`7cWJe2X^tXR5uXc0YA7'Snj7p7,XnT-H=!;P4Gm9:u=i6pG&kc#./EpRtAa1Q>WB+ok=CZB0-Omm"](51%>W:_?HjK_q0a0R]NcTai>9),Q3.e4n=dW_iDqP3l+P_4.(-J]MHc/OY(2HIqIbD0;pd=/2!J7N($]`m#ueHDr652hd\a$KA"<<_o/d5K;@a=mIDPgA7SR.`kMl0URUBVkgSAre-ZU5j7%o)McZ`hnX5H:#<["S/HfU6m<)9SdO"B!D])eRQqN3>3laS33Z.oDR27u$g]E^r.,%"`KL^@r'A+HEA&TU>7G3n);-%Err<mYIu"UdJ:iA,\K<N)"booL?*JcX[]"#kGuKk,6_O]>ruap@m+&MQ'!@<,)9bVTCXXVM@uEHE@F`As]sNjXrK0+H%-^%F+,"IE?FmVL(84+F6]Nsk%os.`pK;qhE8_K5$%EM_Df+2on/`ETgfonKaG)6Y**1*KhGeLSE4+5FM'Zhk8l*uHXlmn'dQb'_.,936G?Bd)9T(OhX*`?]#3MdX.U2>[N@WT+3`->jp>FO#fisM68;E^J*-A)I@hSs@EA`4JEKZ]pM(_d,--DW@VduMg((aP$]%U3o$U^.G7PkU^YBaWX4)=8XXGXsGp!H@90i2,,I3.n_aHT"(:=YOs-8jn-Ok[fYO5#/G+_M]Bn_3?H<'@R^1qCl7l914`(M5R.=6;)e\..ng4,qb)53:@D;;HIAU7,O.9\,AL(R=[M(f;0D*jVS]3.3_+/?MK&rd/M)>m/8K?.cRlo/B<76KCKD1fhTaPNg<H[\ds?;/$h6Y/j!;`J*g=P+coF1\IdFD<lH$:&$fDH]6s3U-a=C3'2Ui$-XFj$_/\^~>endstream
+endobj
+48 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 241
+>>
+stream
+Garp%b6l*?&-^F/^Z$kG1j14l\eONu>Zf&XBRPD5`#%FjS(&W[/42ak$$-V#%7Tqq<l!3pS.g_;pE1arr"=(C>`p9NC4<K&;Aj%R1Fl-7*bG"#-B.0;&^G'l/=oF89])pF0P-8$Hj,\M.;*c3)Wr)QP')^Zlae.a>F[WSST"8Y(:3[^2sJ4%i<Krqe?G["B6?aSlK$Vt;@%(.Ch2-U'&:8NFPEh9klit4E6@`)$-=,i6V2b~>endstream
+endobj
+xref
+0 49
+0000000000 65535 f 
+0000000073 00000 n 
+0000000114 00000 n 
+0000000221 00000 n 
+0000000333 00000 n 
+0000000538 00000 n 
+0000000743 00000 n 
+0000000948 00000 n 
+0000001033 00000 n 
+0000001300 00000 n 
+0000001373 00000 n 
+0000001488 00000 n 
+0000001579 00000 n 
+0000001686 00000 n 
+0000001788 00000 n 
+0000001894 00000 n 
+0000002004 00000 n 
+0000002119 00000 n 
+0000002224 00000 n 
+0000002338 00000 n 
+0000002449 00000 n 
+0000002560 00000 n 
+0000002674 00000 n 
+0000002775 00000 n 
+0000002878 00000 n 
+0000002988 00000 n 
+0000003099 00000 n 
+0000003211 00000 n 
+0000003323 00000 n 
+0000003424 00000 n 
+0000003534 00000 n 
+0000003648 00000 n 
+0000003762 00000 n 
+0000003865 00000 n 
+0000003985 00000 n 
+0000004090 00000 n 
+0000004202 00000 n 
+0000004324 00000 n 
+0000004443 00000 n 
+0000004574 00000 n 
+0000004688 00000 n 
+0000004796 00000 n 
+0000004902 00000 n 
+0000005012 00000 n 
+0000005117 00000 n 
+0000005215 00000 n 
+0000005287 00000 n 
+0000006307 00000 n 
+0000007315 00000 n 
+trailer
+<<
+/ID 
+[<4debf335ad45bfdf26e523303a276a60><4debf335ad45bfdf26e523303a276a60>]
+% ReportLab generated PDF document -- digest (http://www.reportlab.com)
+
+/Info 8 0 R
+/Root 7 0 R
+/Size 49
+>>
+startxref
+7647
+%%EOF

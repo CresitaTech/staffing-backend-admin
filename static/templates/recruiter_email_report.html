@@ -1,0 +1,137 @@
+	<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Search By</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<style>
+       
+        table,
+        td,
+        th {
+            font-size:15px;
+            text-align: left;
+            font-family: Arial, Helvetica, sans-serif;
+            line-height:20px;
+            color: #0c0e14;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table td{
+            background:#fff;
+        }
+        .table,
+        .table td,
+        .table th {
+            border: 1px solid #ddd;
+            padding:0px 5px;
+			height:30px;
+			line-height:30px;
+        }
+        .table th{
+            background:#f4f4f4;
+        }
+       
+    </style>
+</head>
+
+<body style=" margin:0px auto; padding:0px;  font-family: Arial, Helvetica, sans-serif; color:#0c0e14; background:#fff;">
+
+
+
+
+    <div style="background:#fff; border-radius:4px; width:100%; max-width: 100%;   margin:0px auto;">
+        <div style="padding:0px; background: #fff; min-height:100px; ">
+		
+		
+             <table style=" margin-bottom:10px;" width="100%" cellspacing="0" cellpedding="0" border="0">
+				 <tr>
+                     <td><strong>Recruiters,</strong> please check your submissions for today in the system for accuracy.</td>
+                 </tr>
+				 <tr>
+                     <td><strong>BDMs,</strong> please check any of the following submissions are good for your jobs.</td>
+                 </tr>
+			</table>
+			 
+			 
+			<table width="100%" cellspacing="0" cellpedding="0" border="0">
+                <tr>
+                    <td style="padding-top:10px; padding-bottom:10px;">
+                        <strong style="color: #f20e0e;">No Submissions by these recruiters</strong>
+                    </td>
+                </tr>
+                <tr>   
+                    <td>
+                        <table width="100%" cellspacing="0" cellpedding="0" border="0"  class="table">
+                            <tr>
+                                <th style="color: #f20e0e; padding-bottom:10px; ">Recruiter Name</th>
+                                <th style="color: #f20e0e; padding-bottom:10px;">Submissions</th>
+                            </tr>
+							{% if no_submission|length %}
+							{% for item in no_submission %} 
+                            <tr> 
+                                <td style="color: #f20e0e; padding-bottom:10px;">{{item}}</td>
+                                <td style="color: #f20e0e; padding-bottom:10px;">0</td>
+                            </tr>  
+                          
+							{% endfor %} 
+							{% else %}
+							<tr>
+								<td colspan="2" style="text-align: center; color: #f20e0e;">No Records Found</td>
+							</tr>
+							{% endif %}
+							
+							<tr> 
+                                <td style="color: #f20e0e; padding-bottom:10px;">&nbsp;</td>
+                                <td style="color: #f20e0e; padding-bottom:10px;">&nbsp;</td>
+                            </tr> 
+						
+				
+                        </table>
+                    </td>
+                </tr> 
+            </table>
+			
+			 
+            <table width="100%" cellspacing="0" cellpedding="0" border="0" style="margin-bottom:10px;" class="table">
+                <tr>
+				<th>Date</th>
+				<th>Recruiter</th>
+				<th>Candidate</th> 
+				<th>BDM</th> 
+				<th>Client</th>
+				<th>Job Title</th> 
+				<th>Min Rate/ Salary</th>
+				<th>Max Rate/ Salary</th>
+                </tr>
+				{% if data|length %}
+				{% for item in data %}
+                 <tr>
+					<td>{{item.created_at}}</td>
+                     <td>{{item.recruiter_name}}</td>
+                     <td>{{item.candidate_name}}</td>
+                     <td>{{item.bdm_name}}</td>
+					 <td>{{item.client_name}}</td>
+					 <td>{{item.job_title}}</td>
+					 <td> {% if item.min_salary != None %}{{ item.min_salary }}{% else %}{{ item.min_rate }} {% endif %}</td>
+					 <td> {% if item.max_salary != None %}{{ item.max_salary }}{% else %}{{ item.max_rate }} {% endif %}</td>
+
+                 </tr>
+				{% endfor %}
+				{% else %}
+				<tr>
+					<td colspan="7" style="text-align: center; color: #f20e0e;">No Records Found</td>
+                </tr>
+				{% endif %}
+			</table>
+        </div>
+    </div>
+</body>
+
+</html>

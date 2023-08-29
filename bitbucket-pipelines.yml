@@ -1,0 +1,158 @@
+# This is a sample build configuration for Python.
+# Check our guides at https://confluence.atlassian.com/x/x4UWN for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: python:3.8.6
+options:
+  docker: true
+  size: 2x
+
+clone:
+  depth: full
+
+definitions:
+  caches:
+    sonar: ~/.sonar/cache
+
+  services:
+    docker:
+      memory: 4096
+
+pipelines:
+
+  pull-requests:
+    '**': # All PR
+      - step:
+          name: Run Unit Tests
+          caches:
+            - pip
+          script:
+            - pip install -r requirements.txt
+            - cd trulocal_endpoints
+            - coverage erase
+            - coverage run --source=. manage.py test trulocal_endpoints.tests --settings=trulocal_endpoints.settings.test --failfast
+            - coverage xml
+          artifacts: # defining the artifacts to be passed to each future step.
+            - trulocal_endpoints/coverage
+            - trulocal_endpoints/coverage.xml
+      - step:
+          name: SonarCloud
+          caches:
+            - sonar
+          script:
+            - pipe: sonarsource/sonarcloud-scan:1.2.1
+              variables:
+                SONAR_TOKEN: ${SONAR_TOKEN}
+                SONAR_SCANNER_OPTS: "-Xmx512m"
+
+  branches:
+    # Development Build
+    development:
+      - step:
+          name: Run Unit Tests
+          caches:
+            - pip
+          script:
+            - pip install -r requirements.txt
+            - cd trulocal_endpoints
+            - coverage erase
+            - coverage run --source=. manage.py test trulocal_endpoints.tests --settings=trulocal_endpoints.settings.test --failfast
+            - coverage xml
+      - step:
+          name: SonarCloud
+          caches:
+            - sonar
+          script:
+            - pipe: sonarsource/sonarcloud-scan:1.2.1
+              variables:
+                SONAR_TOKEN: ${SONAR_TOKEN}
+                SONAR_SCANNER_OPTS: "-Xmx512m"
+      - step:
+          name: Build Endpoints
+          script:
+            - export LABEL="trulocal_endpoints_dev-$(date +%Y-%m)-$BITBUCKET_BUILD_NUMBER.tar.gz"
+            - echo $LABEL
+            - git archive --format=tar.gz development -o $LABEL
+          artifacts:
+            - '*.tar.gz'
+      - step:
+          name: Deploy Endpoints to Dev
+          script:
+            - pipe: atlassian/heroku-deploy:1.1.3
+              variables:
+                HEROKU_API_KEY: '$HEROKU_API_KEY'
+                HEROKU_APP_NAME: 'tl-dev-endpoints'
+                ZIP_FILE: "trulocal_endpoints_dev-$(date +%Y-%m)-$BITBUCKET_BUILD_NUMBER.tar.gz"
+                WAIT: 'true'
+      - step:
+          name: Archive Build
+          script:
+            - pipe: atlassian/bitbucket-upload-file:0.1.2
+              variables:
+                BITBUCKET_USERNAME: $BITBUCKET_USERNAME
+                BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
+                FILENAME: "trulocal_endpoints_dev-$(date +%Y-%m)-$BITBUCKET_BUILD_NUMBER.tar.gz"
+    # Staging Build
+    master:
+      - step:
+          name: Run Unit Tests
+          caches:
+            - pip
+          script:
+            - pip install -r requirements.txt
+            - python trulocal_endpoints/manage.py test trulocal_endpoints.tests --settings=trulocal_endpoints.settings.test --failfast
+      - step:
+          name: Build Endpoints
+          script:
+            - export LABEL="trulocal_endpoints_staging-$(date +%Y-%m)-$BITBUCKET_BUILD_NUMBER.tar.gz"
+            - echo $LABEL
+            - git archive --format=tar.gz master -o $LABEL
+          artifacts:
+            - '*.tar.gz'
+      - step:
+          name: Deploy Endpoints to Staging
+          script:
+            - pipe: atlassian/heroku-deploy:1.1.3
+              variables:
+                HEROKU_API_KEY: '$HEROKU_API_KEY'
+                HEROKU_APP_NAME: 'tl-staging-endpoints'
+                ZIP_FILE: "trulocal_endpoints_staging-$(date +%Y-%m)-$BITBUCKET_BUILD_NUMBER.tar.gz"
+                WAIT: 'true'
+      - step:
+          name: Archive Build
+          script:
+            - pipe: atlassian/bitbucket-upload-file:0.1.2
+              variables:
+                BITBUCKET_USERNAME: $BITBUCKET_USERNAME
+                BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
+                FILENAME: "trulocal_endpoints_staging-$(date +%Y-%m)-$BITBUCKET_BUILD_NUMBER.tar.gz"
+
+  # Prod Build
+  tags:
+    release-*:
+      - step:
+          name: Build Endpoints
+          script:
+            - export LABEL="trulocal_endpoints_prod-$(date +%Y-%m)-$BITBUCKET_BUILD_NUMBER.tar.gz"
+            - echo $LABEL
+            - git archive --format=tar.gz $BITBUCKET_TAG -o $LABEL
+          artifacts:
+            - '*.tar.gz'
+      - step:
+          name: Deploy Endpoints to Prod
+          script:
+            - pipe: atlassian/heroku-deploy:1.1.3
+              variables:
+                HEROKU_API_KEY: '$HEROKU_API_KEY'
+                HEROKU_APP_NAME: 'tl-prod-endpoints'
+                ZIP_FILE: "trulocal_endpoints_prod-$(date +%Y-%m)-$BITBUCKET_BUILD_NUMBER.tar.gz"
+                WAIT: 'true'
+      - step:
+          name: Archive Build
+          script:
+            - pipe: atlassian/bitbucket-upload-file:0.1.2
+              variables:
+                BITBUCKET_USERNAME: $BITBUCKET_USERNAME
+                BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
+                FILENAME: "trulocal_endpoints_prod-$(date +%Y-%m)-$BITBUCKET_BUILD_NUMBER.tar.gz"
