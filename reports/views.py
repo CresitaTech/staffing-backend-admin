@@ -3039,7 +3039,7 @@ class JobSummaryCSV(generics.ListAPIView):
         if status:
             status_values = status.split(',')
         else:
-            status_values = []
+            status_values = None
 
 
         employment_type = request.query_params.get('employment_type')
@@ -3047,18 +3047,18 @@ class JobSummaryCSV(generics.ListAPIView):
         if employment_type:
             employment_type_values = employment_type.split(',')
         else:
-            employment_type_values = []
+            employment_type_values = None
 
 
         if bdm_id:
             bdm_ids = bdm_id.split(',')
         else:
-            bdm_ids = []
+            bdm_ids = None
 
         if country:
            countries = country.split(',')
         else:
-           countries = []
+           countries = None
            
    
         
@@ -3092,18 +3092,18 @@ class JobSummaryCSV(generics.ListAPIView):
         #print(bdm_id)
 
         if date_range == 'today':
-            queryset = get_jobs_summary_csv_by_date_range_and_id(today, today, bdm_id, country, status_values,employment_type_values)
+            queryset = get_jobs_summary_csv_by_date_range_and_id(today, today, bdm_ids,  countries, status_values,employment_type_values)
         elif date_range == 'yesterday':
-            queryset = get_jobs_summary_csv_by_date_range_and_id(yesterday, today, bdm_id, country, status_values,employment_type_values)
+            queryset = get_jobs_summary_csv_by_date_range_and_id(yesterday, today, bdm_ids,  countries, status_values,employment_type_values)
         elif date_range == 'last-24-hours':
             start_date = str(datetime.datetime.today() - datetime.timedelta(hours=24, minutes=0))
-            queryset = get_jobs_summary_csv_by_date_range_and_id(start_date, today, bdm_id, country, status_values,employment_type_values)
+            queryset = get_jobs_summary_csv_by_date_range_and_id(start_date, today,bdm_ids,  countries, status_values,employment_type_values)
         elif date_range == 'week':
-            queryset = get_jobs_summary_csv_by_date_range_and_id(week_start, week_end, bdm_id, country,status_values,employment_type_values)
+            queryset = get_jobs_summary_csv_by_date_range_and_id(week_start, week_end, bdm_ids,  countries,status_values,employment_type_values)
         elif date_range == 'month':
-            queryset = get_jobs_summary_csv_by_date_range_and_id(month_start, month_end, bdm_id, country, status_values,employment_type_values)
+            queryset = get_jobs_summary_csv_by_date_range_and_id(month_start, month_end, bdm_ids,  countries, status_values,employment_type_values)
         elif start_date is not None and end_date is not None:
-            queryset = get_jobs_summary_csv_by_date_range_and_id(start_date, end_date, bdm_id, country,status_values,employment_type_values)
+            queryset = get_jobs_summary_csv_by_date_range_and_id(start_date, end_date, bdm_ids,  countries,status_values,employment_type_values)
 
         if queryset is not None:
             logger.info('Job Summary CSV Query formed: ' + str(queryset.query))

@@ -228,12 +228,14 @@ def get_jobs_summary_csv_by_date_range_and_id(start_date, end_date, bdm_id, coun
 
     if bdm_id is not None and (country is not None and country != 'none' and country != 'ALL'):
         bdm_id = str(bdm_id).replace("-", "")
-        filterQuery = "AND j.created_by_id = '" + bdm_id + "' AND cl.country = '" + country + "' "
+        bdm_id_values = "','".join(bdm_id.strip("[]").replace("'", "").split(","))
+        filterQuery = "AND j.created_by_id IN ('"+bdm_id_values+"') AND cl.country IN ('" + "','".join(country) + "') "
     elif bdm_id is not None:
         bdm_id = str(bdm_id).replace("-", "")
-        filterQuery = "AND j.created_by_id = '" + bdm_id + "' "
+        bdm_id_values = "','".join(bdm_id.strip("[]").replace("'", "").split(","))
+        filterQuery = "AND j.created_by_id IN ('"+bdm_id_values+"') "
     elif country is not None and country != 'none' and country != 'ALL':
-        filterQuery = "AND cl.country = '" + country + "' "
+        filterQuery = "AND cl.country IN ('" + "','".join(country) + "') "
 
     if status:
         filterQuery1 = "AND j.status IN ('" + "','".join(status) + "') "
