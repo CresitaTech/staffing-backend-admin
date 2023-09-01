@@ -226,6 +226,14 @@ def get_jobs_summary_csv_by_date_range_and_id(start_date, end_date, bdm_id, coun
     filterQuery1 = ""
     filterQuery2=""
 
+    if bdm_id is not None and 'ALL' in bdm_id:
+        bdm_id = 'ALL'
+    if country is not None and 'ALL' in country:
+        country = 'ALL'
+    if status is not None and 'ALL' in status:
+        status = 'ALL'
+
+    
     if bdm_id is not None and (country is not None and country != 'none' and country != 'ALL'):
         bdm_id = str(bdm_id).replace("-", "")
         bdm_id_values = "','".join(bdm_id.strip("[]").replace("'", "").split(","))
