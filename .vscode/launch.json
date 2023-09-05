@@ -9,7 +9,9 @@
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
-            "program": "E:\\py10-ats\\staffing-app-back-end-development-latest\\manage.py",
+            // "program": "E:\\py10-ats\\staffing-app-back-end-development-latest\\manage.py",
+           
+            "program": "D:\\ats-backend\\staffing-app-back-end\\manage.py",
             "args": [
                 "runserver",
                 "--noreload"
