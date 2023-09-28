@@ -8,6 +8,7 @@ from clients.models import clientModel
 from staffingapp.settings import GLOBAL_ROLE, ROLE_CHOICES
 from vendors.models import vendorEmailTemplateModel
 from datetime import datetime
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,7 @@ class candidateStageModel(models.Model):
 
 class CandidateModelManager(models.Manager):
          
-     def backup_candidate(self, obj):
+     def backup_candidate(self, obj, user, candidate_refer_id1):
              
          backup_candidate =  CandidateModelBackup.objects.create(
             first_name=obj.first_name,
@@ -85,7 +86,10 @@ class CandidateModelManager(models.Manager):
            created_by  =obj.created_by ,
             updated_by=obj.updated_by,
            created_at=obj. created_at,
-            updated_at=obj.updated_at 
+            updated_at=obj.updated_at,
+            candidate_refer_id=candidate_refer_id1,
+             user_id = user.id,
+             date_of_deletion = timezone.now()
          )
 
          job_descriptions = obj.job_description.all()
@@ -469,6 +473,10 @@ class CandidateModelBackup(models.Model):
                                    on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    candidate_refer_id = models.CharField(max_length=255, null=True)
+    user_id = models.CharField(max_length=255, null=True)
+    date_of_deletion = models.CharField(max_length=255, null=True)
+
 
     class Meta:
         db_table = 'osms_candidates_backup'
