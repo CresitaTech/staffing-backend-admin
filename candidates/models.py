@@ -9,6 +9,7 @@ from staffingapp.settings import GLOBAL_ROLE, ROLE_CHOICES
 from vendors.models import vendorEmailTemplateModel
 from datetime import datetime
 from django.utils import timezone
+import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +42,7 @@ class candidateStageModel(models.Model):
 
 class CandidateModelManager(models.Manager):
          
-     def backup_candidate(self, obj, user, candidate_refer_id1):
+     def backup_candidate(self, obj, user, candidate_refer_id1,gunicorn_now1):
              
          backup_candidate =  CandidateModelBackup.objects.create(
             first_name=obj.first_name,
@@ -89,7 +90,8 @@ class CandidateModelManager(models.Manager):
             updated_at=obj.updated_at,
             candidate_refer_id=candidate_refer_id1,
              user_id = user.id,
-             date_of_deletion = timezone.now()
+            #  date_of_deletion = timezone.now()
+               date_of_deletion = gunicorn_now1
          )
 
          job_descriptions = obj.job_description.all()

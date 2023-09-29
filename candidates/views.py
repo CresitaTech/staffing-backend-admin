@@ -432,8 +432,12 @@ class CandidateViewSet(viewsets.ModelViewSet):
         user_token = request.META.get('HTTP_AUTHORIZATION', '').split(' ')[1]
         token = Token.objects.get(key=user_token)
         user = token.user
+        utc_now = datetime.datetime.utcnow()
+
+# Convert the UTC time to the Gunicorn server's timezone
+        gunicorn_now = utc_now.astimezone(datetime.timezone(datetime.timedelta(hours=5.5)))
         
-        Candidates.objects_custom.backup_candidate(candObj1,user,candidate_refer_id)
+        Candidates.objects_custom.backup_candidate(candObj1,user,candidate_refer_id,gunicorn_now)
         candObj.delete()
         candidate_id = str(pk).replace('UUID', ''). \
             replace('(\'', '').replace('\')', '').replace('-', '')
