@@ -20,7 +20,7 @@ def create_id():
     
 class JobModelManager(models.Manager):
      
-     def backup_jobs(self, obj):
+     def backup_jobs(self, obj,job_refer_id1,gunicorn_now1,user):
     
         # if self.filter(id=obj.id).exists():
          JobModelBackup.objects.create(
@@ -70,7 +70,11 @@ class JobModelManager(models.Manager):
            created_by=obj.created_by,
             updated_by  =obj.updated_by,
            created_at=obj.created_at,
-            updated_at=obj. updated_at
+            updated_at=obj. updated_at,
+             job_refer_id =job_refer_id1,
+             user_id = user.id,
+            #  date_of_deletion = timezone.now()
+            date_of_deletion = gunicorn_now1
          )
 
          obj.delete()
@@ -258,6 +262,9 @@ class JobModelBackup(models.Model):
     updated_by = models.ForeignKey('users.User', related_name='%(class)s_updated_by', null=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    job_refer_id = models.CharField(max_length=255, null=True)
+    user_id = models.CharField(max_length=255, null=True)
+    date_of_deletion = models.CharField(max_length=255, null=True)
 
 
     class Meta:

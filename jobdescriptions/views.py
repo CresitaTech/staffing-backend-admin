@@ -44,6 +44,7 @@ from staffingapp.settings import GLOBAL_ROLE
 import logging
 from django.http import HttpResponse
 import csv
+from rest_framework.authtoken.models import Token
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -275,8 +276,16 @@ class JobDescriptionViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, pk):
         candObj = self.get_object(pk)
+        job_refer_id=candObj.id
         candObj1 = copy.copy(candObj)
-        jobModel.objects_custom.backup_jobs(candObj1)
+        user_token = request.META.get('HTTP_AUTHORIZATION', '').split(' ')[1]
+        token = Token.objects.get(key=user_token)
+        user = token.user
+        utc_now = datetime.datetime.utcnow()
+
+# Convert the UTC time to the Gunicorn server's timezone
+        gunicorn_now = utc_now.astimezone(datetime.timezone(datetime.timedelta(hours=5.5)))
+        jobModel.objects_custom.backup_jobs(candObj1,job_refer_id,gunicorn_now,user)
         candObj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
         
