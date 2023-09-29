@@ -8,6 +8,7 @@ import copy
 import pandas as pd
 import ast
 from django.db import connection
+from rest_framework.authtoken.models import Token
 from io import BytesIO
 from django.core.files import File
 from django.db.models import Q
@@ -426,8 +427,17 @@ class CandidateViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, pk):
         candObj = self.get_object(pk)
+        candidate_refer_id=candObj.id
         candObj1 = copy.copy(candObj)
-        Candidates.objects_custom.backup_candidate(candObj1)
+        user_token = request.META.get('HTTP_AUTHORIZATION', '').split(' ')[1]
+        token = Token.objects.get(key=user_token)
+        user = token.user
+        utc_now = datetime.datetime.utcnow()
+
+# Convert the UTC time to the Gunicorn server's timezone
+        gunicorn_now = utc_now.astimezone(datetime.timezone(datetime.timedelta(hours=5.5)))
+        
+        Candidates.objects_custom.backup_candidate(candObj1,user,candidate_refer_id,gunicorn_now)
         candObj.delete()
         candidate_id = str(pk).replace('UUID', ''). \
             replace('(\'', '').replace('\')', '').replace('-', '')
