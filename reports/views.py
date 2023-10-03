@@ -4986,8 +4986,24 @@ class AssingedJobsList(generics.ListAPIView):
     serializer_class = AssingedDashboardListSerializer
 
     def get(self, request, format=None):
-        userObj = User.objects.get(pk=request.user.id)
-        print(userObj)
+        # user_queryset = User.objects.get(pk=request.user.id)
+        try:
+            # Attempt to retrieve the user
+            print(request.user.id) 
+            user_token = request.META.get('HTTP_AUTHORIZATION', '').split(' ')[1]
+            token = Token.objects.get(key=user_token)
+            user = token.user
+            logger.info('user id from requiest' + str(user.id))
+            userObj = User.objects.get(pk=user.id)
+            if not userObj:
+               return User.objects.none()
+               
+
+
+        except User.DoesNotExist:
+            # Handle the case where the user does not exist
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        logger.info('passed exception ' + str(userObj))
         serializeObj = UserSerializer(userObj)
         groups = dict(serializeObj.data)
         userGroupDict = None
@@ -5053,8 +5069,12 @@ class AssingedJobsList(generics.ListAPIView):
                     "LEFT JOIN (SELECT o.job_id_id as id, o.created_at as assinged_date,o.assignee_name , CONCAT(op1.first_name,' ',op1.last_name) as primary_recruiter_name,"
                     " CONCAT(op2.first_name,' ',op2.last_name) as secondary_recruiter_name FROM `job_description_assingment` o INNER JOIN `users_user` op1 on o.primary_recruiter_name_id = op1.id LEFT JOIN `users_user` op2 on o.secondary_recruiter_name_id = op2.id) AS B ON A.id = B.id ORDER BY B.assinged_date DESC")
                 logger.info('Query for Rec: ' + str(queryset.query))
+        
 
+        logger.info('after if else condition')
         serializer = AssingedDashboardSerializer(queryset, many=True)
+        logger.info(serializer)
+        logger.info('---------------- PRINTED SERIALIZER')
         # logger.info('ASSIGNED AND UNASSIGNED DATA: ' + str(serializer.data))
         return Response(serializer.data)
 
