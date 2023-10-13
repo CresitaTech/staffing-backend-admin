@@ -153,9 +153,7 @@ def sendBDMMail(request, id, stage, job_id, submission_date, notes):
         userGroupDict = dict(groups['groups'][0])
     if userGroupDict is not None:
         userGroup = userGroupDict['name']
-    print(userGroup)
     uid = str(request.user.id).replace("-", "")
-    print(uid)
 
     if id is not None and stage is not None and job_id is not None and submission_date is not None:
 
@@ -175,143 +173,144 @@ def sendBDMMail(request, id, stage, job_id, submission_date, notes):
                        [job_id])
 
         jd = cursor.fetchone()
-        cursor.execute("SELECT first_name , last_name , email, country FROM users_user WHERE id=%s",
-                       [jd[1]])
-        BDM = cursor.fetchone()
+        if jd[1] is not None:
+            cursor.execute("SELECT first_name , last_name , email, country FROM users_user WHERE id=%s",
+                        [jd[1]])
+            BDM = cursor.fetchone()
 
-        cursor.execute("SELECT first_name , last_name , email , created_by_id, country FROM users_user WHERE id=%s",
-                       [candidate[16]])
-        recruiter = cursor.fetchone()
+            cursor.execute("SELECT first_name , last_name , email , created_by_id, country FROM users_user WHERE id=%s",
+                        [candidate[16]])
+            recruiter = cursor.fetchone()
 
-        cursor.execute("SELECT first_name , last_name , email , created_by_id, country FROM users_user WHERE id=%s",
-                       [recruiter[3]])
-        recruiter_manager = cursor.fetchone()
+            cursor.execute("SELECT first_name , last_name , email , created_by_id, country FROM users_user WHERE id=%s",
+                        [recruiter[3]])
+            recruiter_manager = cursor.fetchone()
 
-        cursor.execute("SELECT resume , driving_license , offer_letter , passport , rtr , salary_slip , i94_document"
-                       ", visa_copy , educational_document FROM osms_candidates_repositery WHERE candidate_name_id = %s",
-                       [candidate_id])
-        repo = cursor.fetchone()
-        if repo is not None:
-            logger.info('Repo Created ...........')
-            context_email1 = {'BDM_name': BDM[0],
-                              'sender_name': request.user.first_name + ' ' + request.user.last_name,
-                              'job_title': jd[0],
-                              'notes': notes,
-                              'candidate_info': {"first_name": candidate[2],
-                                                 "last_name": candidate[3],
-                                                 "primary_phone_number": candidate[4],
-                                                 "primary_email": candidate[5],
-                                                 "min_salary": candidate[6],
-                                                 "max_salary": candidate[17],
-                                                 "min_rate": candidate[7],
-                                                 "max_rate": candidate[8],
-                                                 "current_location": candidate[9],
-                                                 "visa": candidate[10],
-                                                 "stage": stage,
-                                                 "open_for_relocation": candidate[11],
-                                                 "total_experience": candidate[12],
-                                                 "qualification": candidate[13],
-                                                 "total_experience_in_usa": candidate[14],
-                                                 "any_offer_in_hand": candidate[15],
-                                                 "job_id": jd[3],
-                                                 "updated_by": request.user.first_name + ' ' + request.user.last_name,
-                                                 "submission_date": submission_date,
-                                                 "remarks": candidate[18],
-                                                 "employer_name": candidate[19],
-                                                 "engagement_type": candidate[20],
-                                                 "company_name": candidate[21],
-                                                 "employer_email": candidate[22],
-                                                 "employer_phone_number": candidate[23]
-                                                 },
-                              'repo_details': {"resume": repo[0],
-                                               "driving_license": repo[1],
-                                               "offer_letter": repo[2],
-                                               "passport": repo[3],
-                                               "rtr": repo[4],
-                                               "salary_slip": repo[5],
-                                               "i94_document": repo[6],
-                                               "visa_copy": repo[7],
-                                               "educational_document": repo[8]
-                                               }
-                              }
+            cursor.execute("SELECT resume , driving_license , offer_letter , passport , rtr , salary_slip , i94_document"
+                        ", visa_copy , educational_document FROM osms_candidates_repositery WHERE candidate_name_id = %s",
+                        [candidate_id])
+            repo = cursor.fetchone()
+            if repo is not None:
+                logger.info('Repo Created ...........')
+                context_email1 = {'BDM_name': BDM[0],
+                                'sender_name': request.user.first_name + ' ' + request.user.last_name,
+                                'job_title': jd[0],
+                                'notes': notes,
+                                'candidate_info': {"first_name": candidate[2],
+                                                    "last_name": candidate[3],
+                                                    "primary_phone_number": candidate[4],
+                                                    "primary_email": candidate[5],
+                                                    "min_salary": candidate[6],
+                                                    "max_salary": candidate[17],
+                                                    "min_rate": candidate[7],
+                                                    "max_rate": candidate[8],
+                                                    "current_location": candidate[9],
+                                                    "visa": candidate[10],
+                                                    "stage": stage,
+                                                    "open_for_relocation": candidate[11],
+                                                    "total_experience": candidate[12],
+                                                    "qualification": candidate[13],
+                                                    "total_experience_in_usa": candidate[14],
+                                                    "any_offer_in_hand": candidate[15],
+                                                    "job_id": jd[3],
+                                                    "updated_by": request.user.first_name + ' ' + request.user.last_name,
+                                                    "submission_date": submission_date,
+                                                    "remarks": candidate[18],
+                                                    "employer_name": candidate[19],
+                                                    "engagement_type": candidate[20],
+                                                    "company_name": candidate[21],
+                                                    "employer_email": candidate[22],
+                                                    "employer_phone_number": candidate[23]
+                                                    },
+                                'repo_details': {"resume": repo[0],
+                                                "driving_license": repo[1],
+                                                "offer_letter": repo[2],
+                                                "passport": repo[3],
+                                                "rtr": repo[4],
+                                                "salary_slip": repo[5],
+                                                "i94_document": repo[6],
+                                                "visa_copy": repo[7],
+                                                "educational_document": repo[8]
+                                                }
+                                }
 
-        else:
-            logger.info('No Repo Created ...........')
-            context_email1 = {'BDM_name': BDM[0],
-                              'sender_name': request.user.first_name + ' ' + request.user.last_name,
-                              'job_title': jd[0],
-                              'notes': notes,
-                              'candidate_info': {"first_name": candidate[2],
-                                                 "last_name": candidate[3],
-                                                 "primary_phone_number": candidate[4],
-                                                 "primary_email": candidate[5],
-                                                 "min_salary": candidate[6],
-                                                 "max_salary": candidate[17],
-                                                 "min_rate": candidate[7],
-                                                 "max_rate": candidate[8],
-                                                 "current_location": candidate[9],
-                                                 "visa": candidate[10],
-                                                 "stage": stage,
-                                                 "open_for_relocation": candidate[11],
-                                                 "total_experience": candidate[12],
-                                                 "qualification": candidate[13],
-                                                 "total_experience_in_usa": candidate[14],
-                                                 "any_offer_in_hand": candidate[15],
-                                                 "job_id": jd[3],
-                                                 "updated_by": request.user.first_name + ' ' + request.user.last_name,
-                                                 "submission_date": submission_date,
-                                                 "remarks": candidate[18],
-                                                 "employer_name": candidate[19],
-                                                 "engagement_type": candidate[20],
-                                                 "company_name": candidate[21],
-                                                 "employer_email": candidate[22],
-                                                 "employer_phone_number": candidate[23]
-                                                 }
-                              }
-
-        mail = Mails()
-        mail.subject = 'Submission: ' + candidate[2] + ' ' + candidate[3] \
-                       + ' for ' + jd[0] + ' ' + jd[2]
-        mail.from_email = request.user.email.strip()
-        mail.email = BDM[2].strip()
-        mail.jd = None
-        if stage.strip() == 'Submission':
-            mail.resume = candidate[0]
-        else:
-            mail.resume = None
-        mail.message = render_to_string('candidate_submission_to_BDM.html', context_email1)
-        mail.condidate_email = None
-
-        if userGroup is not None and userGroup == GLOBAL_ROLE.get('ADMIN'):
-            setattr(mail, 'cc_email', [request.user.email.strip(), recruiter_manager[2].strip(), recruiter[2].strip(),
-                                       'recsub@opallios.com'])
-        elif userGroup is not None and userGroup == GLOBAL_ROLE.get('BDMMANAGER'):
-            if BDM[3].strip() == 'India':
-                setattr(mail, 'cc_email', [recruiter_manager[2].strip(), recruiter[2].strip(), 'recsub@opallios.com',
-                                           'vibhuti@opallioslabs.com'])
             else:
-                setattr(mail, 'cc_email', [recruiter_manager[2].strip(), recruiter[2].strip(), 'recsub@opallios.com'])
+                logger.info('No Repo Created ...........')
+                context_email1 = {'BDM_name': BDM[0],
+                                'sender_name': request.user.first_name + ' ' + request.user.last_name,
+                                'job_title': jd[0],
+                                'notes': notes,
+                                'candidate_info': {"first_name": candidate[2],
+                                                    "last_name": candidate[3],
+                                                    "primary_phone_number": candidate[4],
+                                                    "primary_email": candidate[5],
+                                                    "min_salary": candidate[6],
+                                                    "max_salary": candidate[17],
+                                                    "min_rate": candidate[7],
+                                                    "max_rate": candidate[8],
+                                                    "current_location": candidate[9],
+                                                    "visa": candidate[10],
+                                                    "stage": stage,
+                                                    "open_for_relocation": candidate[11],
+                                                    "total_experience": candidate[12],
+                                                    "qualification": candidate[13],
+                                                    "total_experience_in_usa": candidate[14],
+                                                    "any_offer_in_hand": candidate[15],
+                                                    "job_id": jd[3],
+                                                    "updated_by": request.user.first_name + ' ' + request.user.last_name,
+                                                    "submission_date": submission_date,
+                                                    "remarks": candidate[18],
+                                                    "employer_name": candidate[19],
+                                                    "engagement_type": candidate[20],
+                                                    "company_name": candidate[21],
+                                                    "employer_email": candidate[22],
+                                                    "employer_phone_number": candidate[23]
+                                                    }
+                                }
 
-        elif userGroup is not None and userGroup == GLOBAL_ROLE.get('RECRUITERMANAGER'):
-            if recruiter_manager[4].strip() == 'India':
-                setattr(mail, 'cc_email', [request.user.email.strip(), recruiter[2].strip(), 'recsub@opallios.com',
-                                           'vibhuti@opallioslabs.com'])
+            mail = Mails()
+            mail.subject = 'Submission: ' + candidate[2] + ' ' + candidate[3] \
+                        + ' for ' + jd[0] + ' ' + jd[2]
+            mail.from_email = request.user.email.strip()
+            mail.email = BDM[2].strip()
+            mail.jd = None
+            if stage.strip() == 'Submission':
+                mail.resume = candidate[0]
             else:
-                setattr(mail, 'cc_email', [request.user.email.strip(), recruiter[2].strip(), 'recsub@opallios.com'])
+                mail.resume = None
+            mail.message = render_to_string('candidate_submission_to_BDM.html', context_email1)
+            mail.condidate_email = None
 
-        elif userGroup is not None and userGroup == GLOBAL_ROLE.get('RECRUITER'):
-            if recruiter[4].strip() == 'India':
-                setattr(mail, 'cc_email',
-                        [request.user.email.strip(), recruiter_manager[2].strip(), 'recsub@opallios.com',
-                         'vibhuti@opallioslabs.com'])
-            else:
-                setattr(mail, 'cc_email',
-                        [request.user.email.strip(), recruiter_manager[2].strip(), 'recsub@opallios.com'])
+            if userGroup is not None and userGroup == GLOBAL_ROLE.get('ADMIN'):
+                setattr(mail, 'cc_email', [request.user.email.strip(), recruiter_manager[2].strip(), recruiter[2].strip(),
+                                        'recsub@opallios.com'])
+            elif userGroup is not None and userGroup == GLOBAL_ROLE.get('BDMMANAGER'):
+                if BDM[3].strip() == 'India':
+                    setattr(mail, 'cc_email', [recruiter_manager[2].strip(), recruiter[2].strip(), 'recsub@opallios.com',
+                                            'vibhuti@opallioslabs.com'])
+                else:
+                    setattr(mail, 'cc_email', [recruiter_manager[2].strip(), recruiter[2].strip(), 'recsub@opallios.com'])
 
-        elif userGroup is None or userGroup == '':
-            setattr(mail, 'cc_email', [])
+            elif userGroup is not None and userGroup == GLOBAL_ROLE.get('RECRUITERMANAGER'):
+                if recruiter_manager[4].strip() == 'India':
+                    setattr(mail, 'cc_email', [request.user.email.strip(), recruiter[2].strip(), 'recsub@opallios.com',
+                                            'vibhuti@opallioslabs.com'])
+                else:
+                    setattr(mail, 'cc_email', [request.user.email.strip(), recruiter[2].strip(), 'recsub@opallios.com'])
 
-        sendCandidateBDMMail(request, mail)
+            elif userGroup is not None and userGroup == GLOBAL_ROLE.get('RECRUITER'):
+                if recruiter[4].strip() == 'India':
+                    setattr(mail, 'cc_email',
+                            [request.user.email.strip(), recruiter_manager[2].strip(), 'recsub@opallios.com',
+                            'vibhuti@opallioslabs.com'])
+                else:
+                    setattr(mail, 'cc_email',
+                            [request.user.email.strip(), recruiter_manager[2].strip(), 'recsub@opallios.com'])
+
+            elif userGroup is None or userGroup == '':
+                setattr(mail, 'cc_email', [])
+
+            sendCandidateBDMMail(request, mail)
 
 
 def sendClientMail(request, candidate_name_id, job_id):

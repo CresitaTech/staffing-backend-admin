@@ -3,13 +3,13 @@ import json
 from django.shortcuts import render
 
 # Create your views here.
-from rest_framework import generics, viewsets, status
+from rest_framework import  viewsets, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 import requests
-from kafka import KafkaConsumer
-from kafka import TopicPartition
-from kafka import KafkaProducer
+# from kafka import KafkaConsumer
+# from kafka import TopicPartition
+# from kafka import KafkaProducer
 import json
 from time import sleep
 

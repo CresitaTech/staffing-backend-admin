@@ -13,7 +13,6 @@ from io import BytesIO
 from django.core.files import File
 from django.db.models import Q
 from django.utils.html import format_html
-from docx.document import Document
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import DjangoModelPermissions
 from django.http import HttpResponse
@@ -21,7 +20,7 @@ import csv
 import os
 from io import StringIO
 from django.core.files import File
-from django.http import HttpResponse, StreamingHttpResponse
+from django.http import  StreamingHttpResponse
 from django.utils.text import slugify
 
 from candidates.filters import CandidateFilter
@@ -47,14 +46,12 @@ from candidates.utils import sendMail, sendRTRMail, sendSubmissionMail, generate
     sendClientMail
 from comman_utils.data_preprocessing import extractContent
 from comman_utils.utils import handle_file_upload, download_csv, get_current_date
-from interviewers.models import designationModel
-from interviewers.serializers import DesignationSerializer
 from interviews.models import Mails
 from clients.models import clientModel
 from django.template.loader import render_to_string
 from candidatesdocumentrepositery.models import candidatesRepositeryModel
 from jobdescriptions.models import jobModel, jobAssingmentModel
-from jobdescriptions.serializers import JobDescriptionListSerializer, JobAssingmentSerializer
+from jobdescriptions.serializers import  JobAssingmentSerializer
 from jobdescriptions.utils import render_to_pdf
 from django.conf import settings
 from staffingapp.settings import GLOBAL_ROLE
@@ -894,7 +891,13 @@ class CandidatesJobStagesViewSet(viewsets.ModelViewSet):
         serializeObj = CandidateJobsStagesWriteSerializer(data=request.data, context={'request': request})
         if serializeObj.is_valid():
             # submission_datetime = serializeObj.data['submission_date'] + ' ' + utils.getCurrentTime()
-            serializeObj.save(created_by_id=request.user.id, updated_by_id=request.user.id)
+            created_by_id=request.user.id  
+            if  created_by_records := candidatesJobDescription.objects.filter(candidate_name_id= request.data['candidate_name']).exists():
+                first_record = candidatesJobDescription.objects.filter(candidate_name_id= request.data['candidate_name']).first()
+                created_by_id = first_record.created_by_id
+                created_date = first_record.created_at
+            # submission_datetime = serializeObj.data['submission_date'] + ' ' + utils.getCurrentTime()
+            serializeObj.save(created_by_id=created_by_id, updated_by_id=request.user.id)
             logger.info('serializeObj data: ' + str(serializeObj.data))
 
             stage_id = str(serializeObj.data['stage']).replace('UUID', ''). \
@@ -915,7 +918,7 @@ class CandidatesJobStagesViewSet(viewsets.ModelViewSet):
                 BookAuthor.objects.create(candidates_id=candidate_id, jobmodel_id=job_id)
 
             activityStatusModel.objects.create(candidate_name_id=candidate_id, activity_status=stage[0].strip(),
-                                               job_id_id=job_id, created_by_id=request.user.id,
+                                               job_id_id=job_id, created_by_id=created_by_id,
                                                updated_by_id=request.user.id)
 
             if stage[0].strip() == "SendOut":
@@ -958,7 +961,11 @@ class CandidatesJobStagesViewSet(viewsets.ModelViewSet):
 
             # obj = serializeObj.save(updated_by_id=request.user.id)
             # submission_datetime = serializeObj.data['submission_date'] + ' ' + utils.getCurrentTime()
-            serializeObj.save(updated_by_id=request.user.id)
+            created_by_id=request.user.id  
+            if created_by_records := candidatesJobDescription.objects.filter(candidate_name_id= request.data['candidate_name']).exists():
+                first_record = candidatesJobDescription.objects.filter(candidate_name_id= request.data['candidate_name']).first()
+                created_by_id = first_record.created_by_id
+            serializeObj.save(updated_by_id=request.user.id, created_by_id=created_by_id)
 
             stage_id = str(serializeObj.data['stage']).replace('UUID', ''). \
                 replace('(\'', '').replace('\')', '').replace('-', '')
@@ -974,7 +981,7 @@ class CandidatesJobStagesViewSet(viewsets.ModelViewSet):
             stage = cursor.fetchone()
 
             activityStatusModel.objects.create(candidate_name_id=candidate_id, activity_status=stage[0].strip(),
-                                               job_id_id=job_id, created_by_id=request.user.id,
+                                               job_id_id=job_id, created_by_id=created_by_id,
                                                updated_by_id=request.user.id)
 
             if stage[0].strip() == "SendOut":
