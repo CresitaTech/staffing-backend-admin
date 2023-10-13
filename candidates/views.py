@@ -918,7 +918,7 @@ class CandidatesJobStagesViewSet(viewsets.ModelViewSet):
                 BookAuthor.objects.create(candidates_id=candidate_id, jobmodel_id=job_id)
 
             activityStatusModel.objects.create(candidate_name_id=candidate_id, activity_status=stage[0].strip(),
-                                               job_id_id=job_id, created_by_id=request.user.id,
+                                               job_id_id=job_id, created_by_id=created_by_id,
                                                updated_by_id=request.user.id)
 
             if stage[0].strip() == "SendOut":
@@ -981,7 +981,7 @@ class CandidatesJobStagesViewSet(viewsets.ModelViewSet):
             stage = cursor.fetchone()
 
             activityStatusModel.objects.create(candidate_name_id=candidate_id, activity_status=stage[0].strip(),
-                                               job_id_id=job_id, created_by_id=request.user.id,
+                                               job_id_id=job_id, created_by_id=created_by_id,
                                                updated_by_id=request.user.id)
 
             if stage[0].strip() == "SendOut":
