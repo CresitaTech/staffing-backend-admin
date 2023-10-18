@@ -381,6 +381,9 @@ class candidatesJobDescription(models.Model):
                                    on_delete=models.CASCADE)
     updated_by = models.ForeignKey('users.User', related_name='%(class)s_updated_by', null=True,
                                    on_delete=models.CASCADE)
+    submitted_by = models.ForeignKey('users.User', related_name='%(class)s_submitted_by', null=True, 
+                                     blank=True, on_delete=models.CASCADE)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

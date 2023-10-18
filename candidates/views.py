@@ -278,10 +278,6 @@ class CandidateViewSet(viewsets.ModelViewSet):
                 notes = df['notes'].tolist()
                 send_out_dates = df['send_out_date'].tolist()
                 stage_names = df['stage_name'].tolist()
-                # print(notes)
-                # print(len(notes))
-                # print(send_out_dates)
-                # print(len(send_out_dates))
 
                 for item in range(0, len(df)):
                     logger.info('New Candidate created Job: ' + job_descriptions[i])
@@ -896,8 +892,14 @@ class CandidatesJobStagesViewSet(viewsets.ModelViewSet):
                 first_record = candidatesJobDescription.objects.filter(candidate_name_id= request.data['candidate_name']).first()
                 created_by_id = first_record.created_by_id
                 created_date = first_record.created_at
-            # submission_datetime = serializeObj.data['submission_date'] + ' ' + utils.getCurrentTime()
-            serializeObj.save(created_by_id=created_by_id, updated_by_id=request.user.id)
+                
+            submitted_by_id = request.user.id  
+            if candidate_submission_record := candidatesJobDescription.objects.filter(candidate_name_id = request.data['candidate_name'],  job_description_id =request.data['job_description'] ).exists():
+                candidate_submission_record = candidatesJobDescription.objects.filter(candidate_name_id = request.data['candidate_name'],  job_description_id =request.data['job_description'] ).first()
+                if candidate_submission_record.stage == "b46bd2078ca04d67be3f50b645c84cc7":
+                    submitted_by_id  = candidate_submission_record.created_by
+            print("sub__",submitted_by_id)
+            serializeObj.save(created_by_id=created_by_id, updated_by_id=request.user.id, submitted_by_id = submitted_by_id)
             logger.info('serializeObj data: ' + str(serializeObj.data))
 
             stage_id = str(serializeObj.data['stage']).replace('UUID', ''). \
@@ -965,7 +967,13 @@ class CandidatesJobStagesViewSet(viewsets.ModelViewSet):
             if created_by_records := candidatesJobDescription.objects.filter(candidate_name_id= request.data['candidate_name']).exists():
                 first_record = candidatesJobDescription.objects.filter(candidate_name_id= request.data['candidate_name']).first()
                 created_by_id = first_record.created_by_id
-            serializeObj.save(updated_by_id=request.user.id, created_by_id=created_by_id)
+                
+            submitted_by_id = request.user.id  
+            if candidate_submission_record := candidatesJobDescription.objects.filter(candidate_name_id = request.data['candidate_name'],  job_description_id =request.data['job_description'] ).exists():
+                candidate_submission_record = candidatesJobDescription.objects.filter(candidate_name_id = request.data['candidate_name'],  job_description_id =request.data['job_description'] ).first()
+                if candidate_submission_record.stage == "b46bd2078ca04d67be3f50b645c84cc7":
+                    submitted_by_id  = candidate_submission_record.created_by
+            serializeObj.save(updated_by_id=request.user.id, created_by_id=created_by_id, submitted_by=submitted_by_id)
 
             stage_id = str(serializeObj.data['stage']).replace('UUID', ''). \
                 replace('(\'', '').replace('\')', '').replace('-', '')
@@ -1993,6 +2001,7 @@ class GetCandidatesJobsStageList(generics.ListAPIView):
             # internalStatus = internalCandidatesJobDescription.objects.filter(candidate_name_id=candidate_id)
             # combined_list = chain(externalStatus, internalStatus)
             serializer = CandidateJobsStagesSerializer(externalStatus, many=True)
+            print("fdata", serializer.data)
             return Response(serializer.data)
 
 
