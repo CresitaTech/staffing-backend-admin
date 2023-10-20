@@ -973,7 +973,7 @@ class CandidatesJobStagesViewSet(viewsets.ModelViewSet):
                 candidate_submission_record = candidatesJobDescription.objects.filter(candidate_name_id = request.data['candidate_name'],  job_description_id =request.data['job_description'] ).first()
                 if candidate_submission_record.stage == "b46bd2078ca04d67be3f50b645c84cc7":
                     submitted_by_id  = candidate_submission_record.created_by
-            serializeObj.save(updated_by_id=request.user.id, created_by_id=created_by_id, submitted_by=submitted_by_id)
+            serializeObj.save(updated_by_id=request.user.id, created_by_id=created_by_id, submitted_by_id=submitted_by_id)
 
             stage_id = str(serializeObj.data['stage']).replace('UUID', ''). \
                 replace('(\'', '').replace('\')', '').replace('-', '')
