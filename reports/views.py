@@ -4997,7 +4997,7 @@ class AssingedJobsList(generics.ListAPIView):
             userObj = User.objects.get(pk=user.id)
             if not userObj:
                return User.objects.none()
-
+               
         except User.DoesNotExist:
             # Handle the case where the user does not exist
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -5068,27 +5068,13 @@ class AssingedJobsList(generics.ListAPIView):
                     " CONCAT(op2.first_name,' ',op2.last_name) as secondary_recruiter_name FROM `job_description_assingment` o INNER JOIN `users_user` op1 on o.primary_recruiter_name_id = op1.id LEFT JOIN `users_user` op2 on o.secondary_recruiter_name_id = op2.id) AS B ON A.id = B.id ORDER BY B.assinged_date DESC")
                 logger.info('Query for Rec: ' + str(queryset.query))
         
-        from django.core.cache import cache
-        cache_key = "queried_data"
-        cached_data = cache.get(cache_key)
-        if cached_data is not None:
-             data = cached_data
-        else:
-            serializer = AssingedDashboardSerializer(queryset, many=True)
-            data = serializer.data
-            cache.set(cache_key, data, 600)
-            
-        # serializer = AssingedDashboardSerializer(queryset, many=True)
-        # cache.set(cache_key, serializer.data, 300)  
-        # cached_data = cache.get(cache_key)
-        # if cached_data is not None:
-        #     data = cached_data
-        # else:
-        #     data = serializer.data
-        # logger.info(serializer)
-        # logger.info('---------------- PRINTED SERIALIZER')
+
+        logger.info('after if else condition')
+        serializer = AssingedDashboardSerializer(queryset, many=True)
+        logger.info(serializer)
+        logger.info('---------------- PRINTED SERIALIZER')
         # logger.info('ASSIGNED AND UNASSIGNED DATA: ' + str(serializer.data))
-        return Response(data)
+        return Response(serializer.data)
 
 
 class GraphPointList(generics.ListAPIView):
