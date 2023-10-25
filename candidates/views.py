@@ -273,7 +273,7 @@ class CandidateViewSet(viewsets.ModelViewSet):
             if len(serializeObj.data['job_description']) > 0:
                 i = 0
                 job_description = df['job'].tolist()
-                stages = df['status'].tolist()
+                stages = df['status'].tolist()   
                 submission_dates = df['submission_date'].tolist()
                 notes = df['notes'].tolist()
                 send_out_dates = df['send_out_date'].tolist()
@@ -296,14 +296,16 @@ class CandidateViewSet(viewsets.ModelViewSet):
                                                                 send_out_date=send_out_dates[i],
                                                                 created_by_id=request.user.id,
                                                                 updated_by_id=request.user.id,
-                                                                submission_date=submission_dates[i], notes=notes[i])
+                                                                submission_date=submission_dates[i], notes=notes[i],
+                                                                submitted_by_id = request.user.id if stages ==['b46bd207-8ca0-4d67-be3f-50b645c84cc7'] else None)
                     else:
                         candidatesJobDescription.objects.create(candidate_name_id=obj.id, stage_id=stages[i],
                                                                 job_description_id=job_description[i],
                                                                 send_out_date=None,
                                                                 created_by_id=request.user.id,
                                                                 updated_by_id=request.user.id,
-                                                                submission_date=submission_dates[i], notes=notes[i])
+                                                                submission_date=submission_dates[i], notes=notes[i],
+                                                                submitted_by_id = request.user.id if stages ==['b46bd207-8ca0-4d67-be3f-50b645c84cc7'] else None)
 
                     if stage_names[i].strip() == "SendOut":
                         logger.info('Sending Send Out Mail ......')
