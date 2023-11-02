@@ -54,6 +54,7 @@ class LogoutView(GetObjectQuerySet):
 
 
 class UserViewSet(viewsets.ModelViewSet):
+
     """
     API endpoint that allows users to be viewed or edited.
     """
@@ -62,7 +63,7 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [DjangoModelPermissions]
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     filter_fields = ("date_joined", "is_active", "created_at")
-    search_fields = ('date_joined', 'first_name')
+    search_fields = ('date_joined', 'first_name', 'last_name')
 
     def retrieve(self, request, pk):
         candObj = User.objects.get(pk=pk)
@@ -70,25 +71,25 @@ class UserViewSet(viewsets.ModelViewSet):
         # logman.crud(serializeObj)
         return Response(serializeObj.data)
 
-def list(self, request):
-    queryset = self.filter_queryset(self.get_queryset())
-    first_name = self.request.query_params.get('first_name', None)
-    last_name = self.request.query_params.get('last_name', None)
-    
-    if first_name and not last_name:
-        queryset = queryset.filter(first_name__icontains=first_name)
-    elif last_name and not first_name:
-        queryset = queryset.filter(last_name__icontains=last_name)
-    elif first_name and last_name:
-        queryset = queryset.filter(first_name__icontains=first_name, last_name__icontains=last_name)
-    print(queryset)
-    # Move the return statements outside the if-elif block
-    page = self.paginate_queryset(queryset)
-    if page is not None:
-        serializer = UserSerializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
-    serializer = UserSerializer(queryset, many=True)
-    return Response(serializer.data)
+    def list(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+        first_name = self.request.query_params.get('first_name', None)
+        last_name = self.request.query_params.get('last_name', None)
+
+        if first_name and not last_name:
+            queryset = queryset.filter(first_name__icontains=first_name)
+        elif last_name and not first_name:
+            queryset = queryset.filter(last_name__icontains=last_name)
+        elif first_name and last_name:
+            queryset = queryset.filter(first_name__icontains=first_name,last_name__icontains=last_name )
+
+        # Move the return statements outside the if-elif block
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = UserSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = UserSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
     def create(self, request, *args, **kwargs):
