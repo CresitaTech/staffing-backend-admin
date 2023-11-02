@@ -80,27 +80,27 @@ class CandidateViewSet(viewsets.ModelViewSet):
     permission_classes = [DjangoModelPermissions]
 
     def list(self, request):
-        "________________________"
-        #Script to manage submitted_by fields for old records
-        activity_status_entries = activityStatusModel.objects.filter(activity_status = "Submission").all()
-        # print("netxx2", activity_status_entries.candidate_name_id, activity_status_entries.job_id_id)
-        for entry in activity_status_entries:
-            candidate_name_idd = entry.candidate_name_id
-            job_idd = entry.job_id_id
-            updated_by_idd = entry.updated_by_id
-            job_description_entry = candidatesJobDescription.objects.filter(
-                candidate_name_id=candidate_name_idd,
-                job_description_id=job_idd
-            ).first()
-            # Update the updated_by field
-            if job_description_entry:
-                job_description_entry.submitted_by_id = updated_by_idd
-                job_description_entry.save()
-                print("ddone")
-            else:
-                #     # Handle cases where no matching entry is found
-                pass
-        "____________________________________________"
+        # "________________________"
+        # #Script to manage submitted_by fields for old records
+        # activity_status_entries = activityStatusModel.objects.filter(activity_status = "Submission").all()
+        # # print("netxx2", activity_status_entries.candidate_name_id, activity_status_entries.job_id_id)
+        # for entry in activity_status_entries:
+        #     candidate_name_idd = entry.candidate_name_id
+        #     job_idd = entry.job_id_id
+        #     updated_by_idd = entry.updated_by_id
+        #     job_description_entry = candidatesJobDescription.objects.filter(
+        #         candidate_name_id=candidate_name_idd,
+        #         job_description_id=job_idd
+        #     ).first()
+        #     # Update the updated_by field
+        #     if job_description_entry:
+        #         job_description_entry.submitted_by_id = updated_by_idd
+        #         job_description_entry.save()
+        #         print("ddone")
+        #     else:
+        #         #     # Handle cases where no matching entry is found
+        #         pass
+        # "____________________________________________"
         candObj = User.objects.get(pk=request.user.id)
         serializeObj = UserSerializer(candObj)
         # print(serializeObj.data)
