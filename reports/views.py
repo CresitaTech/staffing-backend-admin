@@ -4986,7 +4986,6 @@ class AssingedJobsList(generics.ListAPIView):
     serializer_class = AssingedDashboardListSerializer
 
     def get(self, request, format=None):
-        # user_queryset = User.objects.get(pk=request.user.id)
         try:
             # Attempt to retrieve the user
             print(request.user.id) 
@@ -5017,10 +5016,29 @@ class AssingedJobsList(generics.ListAPIView):
         logger.info('group: ' + str(userGroup))
 
         if userGroup is not None and userGroup == GLOBAL_ROLE.get('ADMIN'):
+            # queryset = jobModel.objects.raw(
+            #     "SELECT * FROM (SELECT j.id , j.job_title ,j.created_at as posted_date, c.company_name FROM `osms_job_description` as j LEFT JOIN `osms_clients` as c ON c.id = j.client_name_id) AS A "
+            #     "LEFT JOIN (SELECT o.job_id_id as id, o.created_at as assinged_date,o.assignee_name , CONCAT(op1.first_name,' ',op1.last_name) as primary_recruiter_name,"
+            #     " CONCAT(op2.first_name,' ',op2.last_name) as secondary_recruiter_name FROM `job_description_assingment` o INNER JOIN `users_user` op1 on o.primary_recruiter_name_id = op1.id LEFT JOIN `users_user` op2 on o.secondary_recruiter_name_id = op2.id) AS B ON A.id = B.id ORDER BY B.assinged_date DESC")
+            
+            #optmize raw query
             queryset = jobModel.objects.raw(
-                "SELECT * FROM (SELECT j.id , j.job_title ,j.created_at as posted_date, c.company_name FROM `osms_job_description` as j LEFT JOIN `osms_clients` as c ON c.id = j.client_name_id) AS A "
-                "LEFT JOIN (SELECT o.job_id_id as id, o.created_at as assinged_date,o.assignee_name , CONCAT(op1.first_name,' ',op1.last_name) as primary_recruiter_name,"
-                " CONCAT(op2.first_name,' ',op2.last_name) as secondary_recruiter_name FROM `job_description_assingment` o INNER JOIN `users_user` op1 on o.primary_recruiter_name_id = op1.id LEFT JOIN `users_user` op2 on o.secondary_recruiter_name_id = op2.id) AS B ON A.id = B.id ORDER BY B.assinged_date DESC")
+                        "SELECT "    
+                        "j.id, j.job_title, j.created_at AS posted_date, c.company_name, "
+                        "o.created_at AS assinged_date, o.assignee_name, "
+                        "CONCAT(op1.first_name, ' ', op1.last_name) AS primary_recruiter_name, "
+                        "CONCAT(op2.first_name, ' ', op2.last_name) AS secondary_recruiter_name "
+                        "FROM `osms_job_description` AS j "
+                        "LEFT JOIN `osms_clients` AS c ON c.id = j.client_name_id "
+                        "LEFT JOIN ( "
+                            "SELECT job_id_id AS id, created_at, assignee_name, "
+                            "primary_recruiter_name_id, secondary_recruiter_name_id "
+                            "FROM `job_description_assingment` "
+                        ") AS o ON j.id = o.id "
+                        "LEFT JOIN `users_user` AS op1 ON o.primary_recruiter_name_id = op1.id "
+                        "LEFT JOIN `users_user` AS op2 ON o.secondary_recruiter_name_id = op2.id "
+                        "ORDER BY o.created_at DESC"
+                    )
             logger.info('Query for ADMIN: ' + str(queryset.query))
 
         elif userGroup is not None and userGroup == GLOBAL_ROLE.get('BDMMANAGER'):
@@ -5029,6 +5047,7 @@ class AssingedJobsList(generics.ListAPIView):
                 "LEFT JOIN (SELECT o.job_id_id as id, o.created_at as assinged_date,o.assignee_name , CONCAT(op1.first_name,' ',op1.last_name) as primary_recruiter_name,"
                 " CONCAT(op2.first_name,' ',op2.last_name) as secondary_recruiter_name FROM `job_description_assingment` o INNER JOIN `users_user` op1 on o.primary_recruiter_name_id = op1.id LEFT JOIN `users_user` op2 on o.secondary_recruiter_name_id = op2.id) AS B ON A.id = B.id ORDER BY A.posted_date DESC",
                 [uid])
+            
             logger.info('Query for BDM: ' + str(queryset.query))
 
         elif userGroup is not None and userGroup == GLOBAL_ROLE.get('RECRUITERMANAGER'):
