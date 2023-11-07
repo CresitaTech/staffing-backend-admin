@@ -5,7 +5,7 @@ from xhtml2pdf import pisa
 from html2docx import html2docx
 from django.core.mail import send_mail, EmailMultiAlternatives, EmailMessage
 from django.contrib import messages
-from weasyprint import HTML
+
 
 from datetime import datetime
 import pytz

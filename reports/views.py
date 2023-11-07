@@ -1983,8 +1983,6 @@ class BdmPerformanceSummaryTable(generics.ListAPIView):
         date_range = request.query_params.get('date_range')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        print(start_date)
-        print(end_date)
         if end_date is not None:
             end_date = get_datetime_from_date(end_date)
         logger.info('Date Range: ' + str(date_range))
@@ -2006,9 +2004,7 @@ class BdmPerformanceSummaryTable(generics.ListAPIView):
             userGroupDict = dict(groups['groups'][0])
         if userGroupDict is not None:
             userGroup = userGroupDict['name']
-        print(userGroup)
         uid = str(request.user.id).replace("-", "")
-        print(uid)
 
         # if userGroup is not None and userGroup == GLOBAL_ROLE.get('ADMIN'):
         if date_range == 'today':
@@ -2049,102 +2045,6 @@ class BdmPerformanceSummaryTable(generics.ListAPIView):
                 "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date >= %s AND cjs.submission_date <= %s ",
                 [start_date, end_date])
 
-        """        elif userGroup is not None and userGroup == GLOBAL_ROLE.get('BDMMANAGER'):
-            if date_range == 'today':
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type,(SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country, cjs.notes as remarks  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date > %s ",
-                    [today])
-            elif date_range == 'yesterday':
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country, cjs.notes as remarks  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date > %s AND cjs.submission_date < %s ",
-                    [yesterday, today])
-            elif date_range == 'week':
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country, cjs.notes as remarks  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date >= %s AND cjs.submission_date <= %s ",
-                    [week_start, week_end])
-            elif date_range == 'month':
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country, cjs.notes as remarks  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date >= %s AND cjs.submission_date <= %s ",
-                    [month_start, month_end])
-            elif start_date is not None and end_date is not None:
-                queryset = Candidates.objects.raw(
-                    "SELECT u.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country, cjs.notes as remarks  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date >= %s AND cjs.submission_date <= %s ",
-                    [start_date, end_date])
-
-        elif userGroup is not None and userGroup == GLOBAL_ROLE.get('RECRUITERMANAGER'):
-            if date_range == 'today':
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type,(SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date > %s ",
-                    [today])
-            elif date_range == 'yesterday':
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date > %s AND cjs.submission_date < %s ",
-                    [yesterday, today])
-            elif date_range == 'week':
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date >= %s AND cjs.submission_date <= %s ",
-                    [week_start, week_end])
-            elif date_range == 'month':
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date >= %s AND cjs.submission_date <= %s ",
-                    [month_start, month_end])
-            elif start_date is not None and end_date is not None:
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date >= %s AND cjs.submission_date <= %s ",
-                    [start_date, end_date])
-
-            # print(str(queryset.query))
-        elif userGroup is not None and userGroup == GLOBAL_ROLE.get('RECRUITER'):
-            if date_range == 'today':
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type,(SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date > %s ",
-                    [today])
-            elif date_range == 'yesterday':
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date > %s AND cjs.submission_date < %s ",
-                    [yesterday, today])
-            elif date_range == 'week':
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date >= %s AND cjs.submission_date <= %s ",
-                    [week_start, week_end])
-            elif date_range == 'month':
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id,j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date >= %s AND cjs.submission_date <= %s ",
-                    [month_start, month_end])
-            elif start_date is not None and end_date is not None:
-                queryset = Candidates.objects.raw(
-                    "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                    "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
-                    "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date >= %s AND cjs.submission_date <= %s ",
-                    [start_date, end_date])"""
 
         if queryset is not None:
             logger.info('BDM Perf Table QuerySet Query formed: ' + str(queryset.query))
@@ -2490,7 +2390,6 @@ class BdmPerformanceSummaryCSV(generics.ListAPIView):
         serializer = BdmPerformanceSummaryCSVSerializer(queryset, many=True)
         array_length = len(serializer.data)
         outputs = []
-        print(array_length)
         uuids = set()
 
         response = HttpResponse(content_type='text/csv')
@@ -2515,6 +2414,15 @@ class BdmPerformanceSummaryCSV(generics.ListAPIView):
             cursor.execute("SELECT first_name, last_name FROM users_user WHERE id=%s", [recruiter_id])
             recruiter_name = cursor.fetchone()
             uuids.add(recruiter_id)
+            
+            #clean remarks tags
+            remarks = serializer.data[i]['remarks']
+            from bs4 import BeautifulSoup
+            soup = BeautifulSoup(remarks, 'html.parser')
+            cleaned_remarks = soup.get_text()
+            if not cleaned_remarks:
+                cleaned_remarks = ""
+                
             rows = {
                 'candidate_name': serializer.data[i]['candidate_name'],
                 'primary_email': serializer.data[i]['primary_email'],
@@ -2543,7 +2451,7 @@ class BdmPerformanceSummaryCSV(generics.ListAPIView):
                 'created_at': serializer.data[i]['created_at'],
                 'activity_status': serializer.data[i]['activity_status'],
                 'last_updated_date': serializer.data[i]['last_updated_date'],
-                'remarks': serializer.data[i]['remarks']
+                'remarks': cleaned_remarks
             }
 
             outputs.append(rows)
