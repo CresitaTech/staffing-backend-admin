@@ -398,6 +398,57 @@ class BdmPerformanceSummarySerializer(serializers.ModelSerializer):
     def get_date(self, instance):
         date = datetime.datetime.now()
         return date.strftime("%Y-%m-%d")
+    
+    
+class BdmPerformanceSummarySerializerSep(serializers.ModelSerializer):
+    id = serializers.CharField(max_length=200)
+    candidate_name = serializers.CharField(max_length=200)
+    primary_email = serializers.CharField(max_length=200)
+    primary_phone_number = serializers.CharField(max_length=200)
+    company_name = serializers.CharField(max_length=200)
+    total_experience = serializers.CharField(max_length=200)
+    rank = serializers.CharField(max_length=200)
+    job_title = serializers.CharField(max_length=200)
+    skills_1 = serializers.CharField(max_length=200)
+    min_rate = serializers.CharField(max_length=200)
+    max_rate = serializers.CharField(max_length=200)
+    min_salary = serializers.CharField(max_length=200)
+    max_salary = serializers.CharField(max_length=200)
+    client_name = serializers.CharField(max_length=200)
+    location = serializers.CharField(max_length=200)
+    bdm_name = serializers.CharField(max_length=200)
+    visa = serializers.CharField(max_length=200)
+    job_type = serializers.CharField(max_length=200)
+    status = serializers.CharField(max_length=200)
+    recruiter_name = serializers.CharField(max_length=200)
+    country = serializers.CharField(max_length=200)
+    created_by_id = serializers.CharField(max_length=200)
+    remarks = serializers.CharField(max_length=200)
+    submission_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    submitted_by_id = serializers.CharField(max_length=200)
+    job_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    first_assingment_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+
+    # submission_date = serializers.SerializerMethodField(method_name='get_date')
+    # job_date = serializers.SerializerMethodField(method_name='get_date')
+
+    class Meta:
+        model = Candidates
+        fields = ["id", "candidate_name", "primary_email", "primary_phone_number",
+                  "company_name", "total_experience", "rank", "job_title", "skills_1", "visa", "job_type",
+                  'min_rate', 'max_rate', "min_salary", "max_salary", "client_name", "location", "bdm_name",
+                  "status", "recruiter_name", "country", "submission_date", "remarks", "job_date", "first_assingment_date",
+                  "created_at",
+                  "created_by_id", "submitted_by_id"
+                  ]
+
+    def get_date(self, instance):
+        date = datetime.datetime.now()
+        return date.strftime("%Y-%m-%d")
+    
+    def get_submitted_by_id(self, instance):
+        return instance.submitted_by_id
 
 
 class BdmPerformanceSummaryCSVSerializer(serializers.ModelSerializer):

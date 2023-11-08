@@ -30,7 +30,7 @@ from rest_framework.permissions import DjangoModelPermissions
 
 from reports.serializers import RecruiterPerformanceSummarySerializer, WeekendEmailReportSerializer, \
     RecruiterPerformanceSummaryGraphSerializer, \
-    BdmPerformanceSummarySerializer, BdmPerformanceSummaryGraphSerializer, JobSummarySerializer, \
+    BdmPerformanceSummarySerializer, BdmPerformanceSummarySerializerSep, BdmPerformanceSummaryGraphSerializer, JobSummarySerializer, \
     JobSummaryGraphSerializer, ClientSummarySerializer, TopFivePlacementSerializer, ClientDropdownListSerializer, \
     JobsDropdownListSerializer, ClientDashboardListSerializer, UserObjectSerializer, ActiveClientSerializer, \
     TotalRecordSerializer, BdmEmailReportSerializer, RecruiterEmailReportSerializer, \
@@ -2035,7 +2035,7 @@ class BdmPerformanceSummaryTable(generics.ListAPIView):
         elif date_range == 'month':
             queryset = Candidates.objects.raw(
                 "SELECT ca.id, j.created_by_id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, ca.primary_email, ca.primary_phone_number, ca.company_name, ca.total_experience, ca.rank, j.job_title as job_title, ca.skills_1, ca.min_rate , ca.max_rate, ca.min_salary , ca.max_salary, j.end_client_name AS client_name, j.location, "
-                "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country, cjs.notes as remarks  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
+                "CONCAT(u.first_name,' ',u.last_name) as bdm_name, s.stage_name as status, ca.created_by_id as recruiter_name, cjs.submission_date AS submission_date, cjs.submitted_by_id AS submitted_by_id, j.created_at AS job_date ,ca.visa as visa ,j.employment_type as job_type, (SELECT ja.created_at as assingment_date FROM job_description_assingment ja WHERE ja.job_id_id = j.id ORDER BY ja.created_at ASC LIMIT 1) as first_assingment_date, cl.country, cjs.notes as remarks  FROM `osms_job_description` as j, `users_user` as u, `osms_clients` as cl, `osms_candidates` as ca,"
                 "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date >= %s AND cjs.submission_date <= %s ",
                 [month_start, month_end])
         elif start_date is not None and end_date is not None:
@@ -2045,15 +2045,12 @@ class BdmPerformanceSummaryTable(generics.ListAPIView):
                 "`candidates_stages` as s , `candidates_jobs_stages` as cjs WHERE j.created_by_id = u.id AND s.stage_name != 'Candidate Added' AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND cjs.submission_date >= %s AND cjs.submission_date <= %s ",
                 [start_date, end_date])
 
-
         if queryset is not None:
             logger.info('BDM Perf Table QuerySet Query formed: ' + str(queryset.query))
         # queryset = self.filter_queryset(queryset)
-        serializer = BdmPerformanceSummarySerializer(queryset, many=True)
-        # print(serializer.data['first_name'])
+        serializer = BdmPerformanceSummarySerializerSep(queryset, many=True)
         array_length = len(serializer.data)
         outputs = []
-        print(array_length)
         uuids = set()
         for i in range(array_length):  # Use `xrange` for python 2.
             cursor = connection.cursor()
@@ -2061,6 +2058,11 @@ class BdmPerformanceSummaryTable(generics.ListAPIView):
             cursor.execute("SELECT first_name, last_name FROM users_user WHERE id=%s", [recruiter_id])
             recruiter_name = cursor.fetchone()
             uuids.add(recruiter_id)
+            
+            
+            submitted_by_id = serializer.data[i]['submitted_by_id']
+            cursor.execute("SELECT first_name, last_name FROM users_user WHERE id=%s", [submitted_by_id])
+            submitted_by = cursor.fetchone() 
 
             rows = {
                 'bdm_id': serializer.data[i]['created_by_id'],
@@ -2085,6 +2087,7 @@ class BdmPerformanceSummaryTable(generics.ListAPIView):
                 'recruiter_name': recruiter_name[0] + ' ' + recruiter_name[1],
                 'client_country': serializer.data[i]['country'],
                 'submission_date': serializer.data[i]['submission_date'],
+                'submitted_by' : submitted_by[0] + ' ' + submitted_by[1] if submitted_by else "",
                 'job_date': serializer.data[i]['job_date'],
                 'remarks': serializer.data[i]['remarks'],
                 'first_assingment_date': serializer.data[i]['first_assingment_date']
@@ -2093,7 +2096,6 @@ class BdmPerformanceSummaryTable(generics.ListAPIView):
             outputs.append(rows)
 
         uuids = list(uuids)
-        print(uuids)
         if len(uuids) > 0:
             userqr = User.objects.filter(id__in=uuids)
             print(str(userqr.query))
