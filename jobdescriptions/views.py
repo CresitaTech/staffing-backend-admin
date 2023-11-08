@@ -854,7 +854,7 @@ class GetUserList(generics.ListAPIView):
     queryset = jobModel.objects.none()
 
     def get(self, request, format=None):
-        queryset = jobModel.objects.raw("SELECT DISTINCT .id , u.first_name , u.last_name ,u.email FROM users_user as u ,"
+        queryset = jobModel.objects.raw("SELECT DISTINCT u.id , u.first_name , u.last_name ,u.email FROM users_user as u ,"
                                         "auth_group as ag , users_user_groups as g WHERE g.user_id = u.id AND u.is_deleted = False AND g.group_id = ag.id AND (ag.name = 'RECRUITER' OR ag.name = 'RECRUITER MANAGER') and u.is_active=1")
         serializer = UserDropDownListSerializer(queryset, many=True)
         return Response(serializer.data)
