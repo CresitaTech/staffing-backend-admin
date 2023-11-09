@@ -4725,7 +4725,7 @@ class TopFiveHighPriorityJobs(generics.ListAPIView):
                 "cjs.updated_at as last_updated FROM `osms_candidates` as ca, candidates_jobs_stages as cjs, "
                 "users_user as u, candidates_stages as s, osms_job_description as j, osms_clients as cl WHERE ca.id = "
                 "cjs.candidate_name_id AND cjs.stage_id = s.id AND ca.created_by_id = u.id AND cjs.job_description_id "
-                "= j.id AND cl.id = j.client_name_id ORDER BY cjs.submission_date DESC LIMIT 5")
+                "= j.id AND cl.id = j.client_name_id AND s.stage_name != 'Candidate Added' ORDER BY cjs.submission_date DESC LIMIT 5")
 
         elif userGroup is not None and userGroup == GLOBAL_ROLE.get('BDMMANAGER'):
             queryset = clientModel.objects.raw(
@@ -4734,7 +4734,7 @@ class TopFiveHighPriorityJobs(generics.ListAPIView):
                 "cjs.updated_at as last_updated FROM `osms_candidates` as ca, candidates_jobs_stages as cjs, "
                 "users_user as u, candidates_stages as s, osms_job_description as j, osms_clients as cl WHERE ca.id = "
                 "cjs.candidate_name_id AND cjs.stage_id = s.id AND ca.created_by_id = u.id AND cjs.job_description_id "
-                "= j.id AND cl.id = j.client_name_id AND j.created_by_id = %s ORDER BY cjs.submission_date DESC LIMIT "
+                "= j.id AND cl.id = j.client_name_id AND s.stage_name != 'Candidate Added' AND j.created_by_id = %s ORDER BY cjs.submission_date DESC LIMIT "
                 "5", [uid])
 
         elif userGroup is not None and userGroup == GLOBAL_ROLE.get('RECRUITERMANAGER'):
@@ -4744,7 +4744,7 @@ class TopFiveHighPriorityJobs(generics.ListAPIView):
                 "cjs.updated_at as last_updated FROM `osms_candidates` as ca, candidates_jobs_stages as cjs, "
                 "users_user as u, candidates_stages as s, osms_job_description as j, osms_clients as cl WHERE ca.id = "
                 "cjs.candidate_name_id AND cjs.stage_id = s.id AND ca.created_by_id = u.id AND cjs.job_description_id "
-                "= j.id AND cl.id = j.client_name_id AND j.created_by_id = %s ORDER BY cjs.submission_date DESC LIMIT "
+                "= j.id AND cl.id = j.client_name_id AND s.stage_name != 'Candidate Added' AND j.created_by_id = %s ORDER BY cjs.submission_date DESC LIMIT "
                 "5", [uid])
 
         logger.info('Top High Priority Jobs: ' + str(queryset.query))
@@ -4761,7 +4761,6 @@ class TopFivePlacement(generics.ListAPIView):
         queryset = Candidates.objects.raw(sql)
         serializer = TopFivePlacementSerializer(queryset, many=True)
         # serializer = AggregateDataSerializer(total_client, many=True)
-        # logger.info('Top Placements Data: ' + str(serializer.data))
         return Response(serializer.data)
 
 
@@ -5310,8 +5309,6 @@ class JobsByBDMSummaryTable(generics.ListAPIView):
 
         # queryset = self.filter_queryset(queryset)
         serializer = JobsByBDMTableSerializer(queryset, many=True)
-        # print(serializer.data['first_name'])
-        # print(serializer.data)
         return Response(serializer.data)
 
 
@@ -5580,8 +5577,7 @@ class ExportGraphsPointList(generics.ListAPIView):
         if request.query_params.get('bdm_id') and request.query_params.get('stage'):
             bdm_id = str(request.query_params.get('bdm_id')).replace('UUID', ''). \
                 replace('(\'', '').replace('\')', '').replace('-', '')
-            # stage_id = str(request.query_params.get('stage_id')).replace('UUID', ''). \
-            # replace('(\'', '').replace('\')', '').replace('-', '')
+
             if date_range == 'today':
                 candObj = candidatesJobDescription.objects.filter(job_description__created_by_id=bdm_id,
                                                                   stage__stage_name=request.query_params.get('stage'),
@@ -5996,8 +5992,6 @@ class ActiveJobsAgingSummaryGraph(generics.ListAPIView):
             print(str(queryset.query))
             # queryset = self.filter_queryset(queryset)
             serializer = ActiveJobsAgingSerializer(queryset, many=True)
-            # print(serializer.data['first_name'])
-            # print(serializer.data)
             return Response(serializer.data)
 
 
@@ -6145,10 +6139,7 @@ class ActiveJobsAgingSummaryTable(generics.ListAPIView):
 
         if queryset is not None:
             print(str(queryset.query))
-            # queryset = self.filter_queryset(queryset)
             serializer = ActiveJobsAgingSerializer(queryset, many=True)
-            # print(serializer.data['first_name'])
-            # print(serializer.data)
             return Response(serializer.data)
 
 
@@ -6160,8 +6151,6 @@ class ActiveJobsAgingSummaryCSV(generics.ListAPIView):
         date_range = request.query_params.get('date_range')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        print(start_date)
-        print(end_date)
         if end_date is not None:
             end_date = get_datetime_from_date(end_date)
         today = utils.get_current_date()
@@ -6179,9 +6168,7 @@ class ActiveJobsAgingSummaryCSV(generics.ListAPIView):
             userGroupDict = dict(groups['groups'][0])
         if userGroupDict is not None:
             userGroup = userGroupDict['name']
-        print(userGroup)
         uid = str(request.user.id).replace("-", "")
-        print(uid)
 
         if userGroup is not None and userGroup == GLOBAL_ROLE.get('ADMIN'):
             if date_range == 'today':
@@ -6300,7 +6287,6 @@ class ActiveJobsAgingSummaryCSV(generics.ListAPIView):
             serializer = ActiveJobsAgingSerializer(queryset, many=True)
             array_length = len(serializer.data)
             outputs = []
-            print(array_length)
             for i in range(array_length):  # Use `xrange` for python 2.
 
                 rows = {
