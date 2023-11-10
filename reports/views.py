@@ -46,7 +46,7 @@ from reports.serializers import RecruiterPerformanceSummarySerializer, WeekendEm
     CandidateReportSerializer, BdmJobsSummaryReportSerializer, BdmJobSummaryTableSerializer, \
     BdmDailyJobsSummaryReportSerializer, BdmJobSummaryTableByTitleSerializer, \
     BdmJobSummaryTableByDatewiseBreakdownSerializer, CandidateDetailsByJobIdSerializer, \
-    JobSummaryTableByTitleAllDataSerializer, \
+    JobSummaryTableByTitleAllDataSerializer, JobSummaryCommonSubmissionSerializerCsv, \
     RecruitersCallsPerformanceSummaryTableSerializer, RecruitersCallsPerformanceSummaryAllDataSerializer, \
     NoSubmissionSerializer, RecruitersCallsPerformanceSummaryAllDataByJobIdSerializer, \
     RecruiterCallsPerformanceSummaryByJobAndRecruiterSerializer
@@ -3262,6 +3262,86 @@ class JobSummaryTableByIdAllDataCSV(generics.ListAPIView):
         writer.writeheader()
         writer.writerows(outputs)
         return response
+    
+    
+    
+class JobSummaryCommonSubmissionCSV(generics.ListAPIView):
+    queryset = Candidates.objects.all()
+    filter_backends = [DjangoFilterBackend, SearchFilter, ]  # SearchFilter,
+    filter_class = ReportFilter
+
+    def get(self, request, format=None):
+        date_range = request.query_params.get('date_range')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+        job_id = request.query_params.get('job_id')
+        if end_date is not None:
+            end_date = get_datetime_from_date(end_date)
+
+        today = utils.get_current_date()
+        yesterday = utils.yesterday_datetime()
+        week_start, week_end = utils.week_date_range()
+        month_start, month_end = utils.month_date_range()
+
+        candObj = User.objects.get(pk=request.user.id)
+        serializeObj = UserSerializer(candObj)
+        groups = dict(serializeObj.data)
+        userGroupDict = None
+        userGroup = None
+        queryset = None
+        if len(groups['groups']) > 0:
+            userGroupDict = dict(groups['groups'][0])
+        if userGroupDict is not None:
+            userGroup = userGroupDict['name']
+
+        job_id = str(job_id).replace("-", "")
+
+        if date_range == 'today':
+            queryset = get_jobs_summary_by_job_title_alldata(today, today, job_id)
+        elif date_range == 'yesterday':
+            queryset = get_jobs_summary_by_job_title_alldata(yesterday, today, job_id)
+        elif date_range == 'last-24-hours':
+            start_date = str(datetime.datetime.today() - datetime.timedelta(hours=24, minutes=0))
+            queryset = get_jobs_summary_by_job_title_alldata(start_date, today, job_id)
+        elif date_range == 'week':
+            queryset = get_jobs_summary_by_job_title_alldata(week_start, week_end, job_id)
+        elif date_range == 'month':
+            queryset = get_jobs_summary_by_job_title_alldata(month_start, month_end, job_id)
+        elif start_date is not None and end_date is not None:
+            queryset = get_jobs_summary_by_job_title_alldata(start_date, end_date, job_id)
+
+        if queryset is not None:
+            logger.info('Job Summary QuerySet Query formed: ' + str(queryset.query))
+        serializer = JobSummaryCommonSubmissionSerializerCsv(queryset, many=True)
+
+        array_length = len(serializer.data)
+        outputs = []
+        uuids = set()
+        for i in range(array_length):
+            rows = {
+                'submission_date': serializer.data[i]['submission_date'],
+                'status': serializer.data[i]['current_status'],
+                'candidate_name': serializer.data[i]['candidate_name'],
+                'recruiter_name': serializer.data[i]['recruiter_name'],
+                'client_name' : serializer.data[i]['company_name'],
+                'remarks': serializer.data[i]['remarks']
+            }
+
+            outputs.append(rows)
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="job_summary.csv"'
+        writer = csv.DictWriter(response, fieldnames=['submission_date', 'status',
+                                                      'candidate_name', 'recruiter_name','client_name', 'remarks'
+                                                      ])
+        writer.writeheader()
+        writer.writerows(outputs)
+        return response
+
+    
+    
+
+
 
 
 class JobSummaryTableByDatewiseBreakdown(generics.ListAPIView):

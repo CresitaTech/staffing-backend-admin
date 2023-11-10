@@ -781,6 +781,26 @@ class JobSummaryTableByTitleAllDataSerializer(serializers.ModelSerializer):
     def get_date(self, instance):
         date = datetime.datetime.now()
         return date.strftime("%m/%d/%Y")
+    
+class JobSummaryCommonSubmissionSerializerCsv(serializers.ModelSerializer):
+    submission_date = serializers.CharField(max_length=200)
+    current_status = serializers.CharField(max_length=200)
+    candidate_name = serializers.CharField(max_length=200)
+    recruiter_name = serializers.CharField(max_length=200)
+    company_name = serializers.CharField(max_length=200)
+    remarks = serializers.CharField(max_length=200)
+    
+    class Meta:
+        model = Candidates
+        fields = ["submission_date", "current_status", "candidate_name",  "recruiter_name", 
+                   "company_name", "remarks"
+                  ]
+
+    def get_date(self, instance):
+        date = datetime.datetime.now()
+        return date.strftime("%m/%d/%Y")
+    
+
 
 
 class BdmJobSummaryTableByTitleSerializer(serializers.ModelSerializer):

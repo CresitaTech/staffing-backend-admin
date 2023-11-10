@@ -14,7 +14,7 @@ from reports.views import RecruiterPerformanceSummaryCSV, RecruiterPerformanceSu
     CandidateDetailsByJobId, JobSummaryTableByDatewiseBreakdown, JobSummaryTableByIdAllData, \
     RecruiterCallsPerformanceSummaryCSV, RecruiterCallsPerformanceSummaryTable, RecruiterCallsPerformanceSummaryGraph, \
     RecruiterCallsPerformanceSummaryAllData, JobSummaryTableByDatewiseBreakdownCSV, CandidateDetailsByJobIdCSV, \
-    JobSummaryTableByIdAllDataCSV, RecruiterCallsPerformanceSummaryAllDataByJobId, \
+    JobSummaryTableByIdAllDataCSV, JobSummaryCommonSubmissionCSV, RecruiterCallsPerformanceSummaryAllDataByJobId, \
     RecruiterCallsPerformanceSummaryAllDataByJobIdCSV, RecruiterCallsPerformanceSummaryByJobAndRecruiter, \
     RecruiterCallsPerformanceSummaryByJobAndRecruiterCSV
 
@@ -62,6 +62,7 @@ urlpatterns = [
 
     path('get_candidate_detail_by_job_id_csv/', CandidateDetailsByJobIdCSV.as_view(), name='get_candidate_detail_by_job_id'),
     path('job_summary_table_by_title_alldata_csv/', JobSummaryTableByIdAllDataCSV.as_view(), name='job_summary_table_by_title'),
+    path('job_summary_common_submission_csv/', JobSummaryCommonSubmissionCSV.as_view(), name='job_summary_table_by_title'),
     path('get_jobs_summary_by_datewise_breakdown_csv/', JobSummaryTableByDatewiseBreakdownCSV.as_view(), name='get_jobs_summary_by_datewise_breakdown'),
 
     path('job_submissions_by_client_csv/', JobSubmissionsByClientCSV.as_view(), name='job_submissions_by_client_csv'),
