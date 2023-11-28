@@ -4104,8 +4104,6 @@ class JobSubmissionsByClientGraph(generics.ListAPIView):
         date_range = request.query_params.get('date_range')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        print(start_date)
-        print(end_date)
         if end_date is not None:
             end_date = get_datetime_from_date(end_date)
         logger.info('Date Range: ' + str(date_range))
@@ -4113,17 +4111,11 @@ class JobSubmissionsByClientGraph(generics.ListAPIView):
         logger.info('End Date: ' + str(end_date))
 
         today = utils.get_current_date()
-        print(today)
         yesterday = utils.yesterday_datetime()
-        print(yesterday)
 
         week_start, week_end = utils.week_date_range()
-        print(week_start)
-        print(week_end)
 
         month_start, month_end = utils.month_date_range()
-        print(month_start)
-        print(month_end)
 
         candObj = User.objects.get(pk=request.user.id)
         serializeObj = UserSerializer(candObj)
@@ -4134,10 +4126,8 @@ class JobSubmissionsByClientGraph(generics.ListAPIView):
             userGroupDict = dict(groups['groups'][0])
         if userGroupDict is not None:
             userGroup = userGroupDict['name']
-        print(userGroup)
         uid = str(request.user.id).replace("-", "")
         queryset = None
-        print(GLOBAL_ROLE.get('ADMIN'))
         if userGroup is not None and userGroup == GLOBAL_ROLE.get('ADMIN'):
             if date_range == 'today':
                 queryset = Candidates.objects.raw(
@@ -4213,13 +4203,8 @@ class JobSubmissionsByClientCSV(generics.ListAPIView):
         country = request.query_params.get('country')
         bdm_id = request.query_params.get('bdm_id')
 
-        print(start_date)
-        print(end_date)
         if end_date is not None:
             end_date = get_datetime_from_date(end_date)
-        logger.info('Date Range: ' + str(date_range))
-        logger.info('Start Date: ' + str(start_date))
-        logger.info('End Date: ' + str(end_date))
 
         today = utils.get_current_date()
         yesterday = utils.yesterday_datetime()
@@ -4236,9 +4221,7 @@ class JobSubmissionsByClientCSV(generics.ListAPIView):
             userGroupDict = dict(groups['groups'][0])
         if userGroupDict is not None:
             userGroup = userGroupDict['name']
-        print(userGroup)
         uid = str(request.user.id).replace("-", "")
-        print(uid)
 
         """        if userGroup is not None and userGroup == GLOBAL_ROLE.get('ADMIN'):
             if date_range == 'today':
@@ -4758,20 +4741,7 @@ class TopClients(generics.ListAPIView):
 
         return Response(serializer.data)
 
-        """        elif userGroup is not None and userGroup == GLOBAL_ROLE.get('BDMMANAGER'):
-            queryset = clientModel.objects.raw(
-                "SELECT cl.id, cl.company_name as client_name, (Select COUNT(s.stage_name) from osms_candidates as c, candidates_stages as s, osms_job_description as j , candidates_jobs_stages as cjs WHERE cjs.stage_id = s.id AND s.stage_name != 'Candidate Added' AND s.stage_name != 'Placed' AND cjs.job_description_id = j.id and cjs.candidate_name_id = c.id and j.created_by_id = %s AND j.client_name_id = cl.id ) as submissions, (Select COUNT(s.stage_name) from osms_candidates as c, candidates_stages as s, osms_job_description as j , candidates_jobs_stages as cjs WHERE cjs.stage_id = s.id AND s.stage_name = 'Placed' AND cjs.job_description_id = j.id and cjs.candidate_name_id = c.id and j.created_by_id = %s AND j.client_name_id = cl.id ) as placed, (Select COUNT(j.job_title) from osms_job_description as j WHERE j.created_by_id = %s AND j.client_name_id = cl.id ) as job_title FROM `osms_clients` as cl WHERE cl.created_by_id = %s",
-                [uid, uid, uid, uid])
-
-        elif userGroup is not None and userGroup == GLOBAL_ROLE.get('RECRUITERMANAGER'):
-            queryset = clientModel.objects.raw(
-                "SELECT cl.id, cl.company_name as client_name, (Select COUNT(s.stage_name) from osms_candidates as c, candidates_stages as s, osms_job_description as j , candidates_jobs_stages as cjs WHERE cjs.stage_id = s.id AND s.stage_name != 'Candidate Added' AND s.stage_name != 'Placed' AND cjs.job_description_id = j.id and j.client_name_id = cl.id and cjs.candidate_name_id = c.id ) as submissions, (Select COUNT(s.stage_name) from osms_candidates as c, candidates_stages as s, osms_job_description as j , candidates_jobs_stages as cjs WHERE cjs.stage_id = s.id AND s.stage_name = 'Placed' AND cjs.job_description_id = j.id and j.client_name_id = cl.id and cjs.candidate_name_id = c.id ) as placed, (Select COUNT(j.job_title) from osms_job_description as j WHERE j.client_name_id = cl.id ) as job_title FROM `osms_clients` as cl, `osms_job_description` as ja WHERE ja.client_name_id = cl.id AND ja.default_assignee_id = %s GROUP BY cl.company_name",
-                [uid])
-
-        logger.info('Top Client: ' + str(queryset.query))
-        serializer = ClientSummarySerializer(queryset, many=True)
-
-        return Response(serializer.data)"""
+       
 
 
 class TopFiveHighPriorityJobs(generics.ListAPIView):
@@ -5015,7 +4985,6 @@ class AssingedJobsList(generics.ListAPIView):
     def get(self, request, format=None):
         try:
             # Attempt to retrieve the user
-            print(request.user.id) 
             user_token = request.META.get('HTTP_AUTHORIZATION', '').split(' ')[1]
             token = Token.objects.get(key=user_token)
             user = token.user
@@ -5048,7 +5017,6 @@ class AssingedJobsList(generics.ListAPIView):
             #     "LEFT JOIN (SELECT o.job_id_id as id, o.created_at as assinged_date,o.assignee_name , CONCAT(op1.first_name,' ',op1.last_name) as primary_recruiter_name,"
             #     " CONCAT(op2.first_name,' ',op2.last_name) as secondary_recruiter_name FROM `job_description_assingment` o INNER JOIN `users_user` op1 on o.primary_recruiter_name_id = op1.id LEFT JOIN `users_user` op2 on o.secondary_recruiter_name_id = op2.id) AS B ON A.id = B.id ORDER BY B.assinged_date DESC")
             
-            #optmize raw query
             queryset = jobModel.objects.raw(
                         "SELECT "    
                         "j.id, j.job_title, j.created_at AS posted_date, c.company_name, "
@@ -5066,7 +5034,10 @@ class AssingedJobsList(generics.ListAPIView):
                         "LEFT JOIN `users_user` AS op2 ON o.secondary_recruiter_name_id = op2.id "
                         "ORDER BY o.created_at DESC"
                     )
-            logger.info('Query for ADMIN: ' + str(queryset.query))
+            
+            is_dashboard_param = request.query_params.get("is_dashboard", None)
+            if is_dashboard_param == "true":
+                queryset = queryset[:5]
 
         elif userGroup is not None and userGroup == GLOBAL_ROLE.get('BDMMANAGER'):
             queryset = jobModel.objects.raw(
@@ -5075,7 +5046,9 @@ class AssingedJobsList(generics.ListAPIView):
                 " CONCAT(op2.first_name,' ',op2.last_name) as secondary_recruiter_name FROM `job_description_assingment` o INNER JOIN `users_user` op1 on o.primary_recruiter_name_id = op1.id LEFT JOIN `users_user` op2 on o.secondary_recruiter_name_id = op2.id) AS B ON A.id = B.id ORDER BY A.posted_date DESC",
                 [uid])
             
-            logger.info('Query for BDM: ' + str(queryset.query))
+            is_dashboard_param = request.query_params.get("is_dashboard", None)
+            if is_dashboard_param == "true":
+                queryset = queryset[:5]
 
         elif userGroup is not None and userGroup == GLOBAL_ROLE.get('RECRUITERMANAGER'):
             if request.query_params.get('action'):
@@ -5087,7 +5060,6 @@ class AssingedJobsList(generics.ListAPIView):
                 if page is not None:
                     serializer = AssingedDashboardListSerializer(queryset, many=True)
                     return self.get_paginated_response(serializer.data)
-                logger.info('Query for RM: ' + str(queryset.query))
             else:
                 # queryset = jobModel.objects.raw(
                 #     "SELECT * FROM (SELECT j.id , j.job_title ,j.created_at as posted_date, c.company_name FROM `osms_job_description` as j LEFT JOIN `osms_clients` as c ON c.id = j.client_name_id) AS A "
@@ -5112,7 +5084,9 @@ class AssingedJobsList(generics.ListAPIView):
                         "ORDER BY o.created_at DESC"
                     )
                 
-                logger.info('Query for RM: ' + str(queryset.query))
+                is_dashboard_param = request.query_params.get("is_dashboard", None)
+                if is_dashboard_param == "true":
+                    queryset = queryset[:5]
 
         elif userGroup is not None and userGroup == GLOBAL_ROLE.get('RECRUITER'):
             if request.query_params.get('action'):
@@ -5132,13 +5106,8 @@ class AssingedJobsList(generics.ListAPIView):
                     "LEFT JOIN (SELECT o.job_id_id as id, o.created_at as assinged_date,o.assignee_name , CONCAT(op1.first_name,' ',op1.last_name) as primary_recruiter_name,"
                     " CONCAT(op2.first_name,' ',op2.last_name) as secondary_recruiter_name FROM `job_description_assingment` o INNER JOIN `users_user` op1 on o.primary_recruiter_name_id = op1.id LEFT JOIN `users_user` op2 on o.secondary_recruiter_name_id = op2.id) AS B ON A.id = B.id ORDER BY B.assinged_date DESC")
                 logger.info('Query for Rec: ' + str(queryset.query))
-        
-
-        logger.info('after if else condition')
+    
         serializer = AssingedDashboardSerializer(queryset, many=True)
-        logger.info(serializer)
-        logger.info('---------------- PRINTED SERIALIZER')
-        # logger.info('ASSIGNED AND UNASSIGNED DATA: ' + str(serializer.data))
         return Response(serializer.data)
 
 
@@ -5149,13 +5118,8 @@ class GraphPointList(generics.ListAPIView):
         date_range = request.query_params.get('date_range')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        print(start_date)
-        print(end_date)
         if end_date is not None:
             end_date = get_datetime_from_date(end_date)
-        logger.info('Date Range: ' + str(date_range))
-        logger.info('Start Date: ' + str(start_date))
-        logger.info('End Date: ' + str(end_date))
 
         today = utils.get_current_date()
         yesterday = utils.yesterday_datetime()
@@ -5351,8 +5315,7 @@ class JobsByBDMSummaryTable(generics.ListAPIView):
         date_range = request.query_params.get('date_range')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        print(start_date)
-        print(end_date)
+
         if end_date is not None:
             end_date = get_datetime_from_date(end_date)
         today = utils.get_current_date()
@@ -5370,9 +5333,7 @@ class JobsByBDMSummaryTable(generics.ListAPIView):
             userGroupDict = dict(groups['groups'][0])
         if userGroupDict is not None:
             userGroup = userGroupDict['name']
-        print(userGroup)
         uid = str(request.user.id).replace("-", "")
-        print(uid)
 
         if userGroup is not None and userGroup == GLOBAL_ROLE.get('ADMIN'):
             if date_range == 'today':
@@ -5425,7 +5386,6 @@ class JobsByBDMSummaryTable(generics.ListAPIView):
         if queryset is not None:
             print(str(queryset.query))
 
-        # queryset = self.filter_queryset(queryset)
         serializer = JobsByBDMTableSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -5439,8 +5399,6 @@ class JobsByBDMSummaryCSV(generics.ListAPIView):
         date_range = request.query_params.get('date_range')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        print(start_date)
-        print(end_date)
         if end_date is not None:
             end_date = get_datetime_from_date(end_date)
         today = utils.get_current_date()
@@ -5458,9 +5416,8 @@ class JobsByBDMSummaryCSV(generics.ListAPIView):
             userGroupDict = dict(groups['groups'][0])
         if userGroupDict is not None:
             userGroup = userGroupDict['name']
-        print(userGroup)
         uid = str(request.user.id).replace("-", "")
-        print(uid)
+    
 
         if userGroup is not None and userGroup == GLOBAL_ROLE.get('ADMIN'):
             if date_range == 'today':
@@ -5559,8 +5516,7 @@ class JobsByBDMSummaryGraph(generics.ListAPIView):
         date_range = request.query_params.get('date_range')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        print(start_date)
-        print(end_date)
+
         if end_date is not None:
             end_date = get_datetime_from_date(end_date)
         today = utils.get_current_date()
@@ -5578,9 +5534,7 @@ class JobsByBDMSummaryGraph(generics.ListAPIView):
             userGroupDict = dict(groups['groups'][0])
         if userGroupDict is not None:
             userGroup = userGroupDict['name']
-        print(userGroup)
         uid = str(request.user.id).replace("-", "")
-        print(uid)
 
         if userGroup is not None and userGroup == GLOBAL_ROLE.get('ADMIN'):
             if date_range == 'today':
@@ -5668,11 +5622,7 @@ class JobsByBDMSummaryGraph(generics.ListAPIView):
                         [start_date, end_date])
 
         if queryset is not None:
-            print(str(queryset.query))
-            # queryset = self.filter_queryset(queryset)
             serializer = JobsByBDMGraphSerializer(queryset, many=True)
-            # print(serializer.data['first_name'])
-            print(serializer.data)
             return Response(serializer.data)
 
 
@@ -5683,8 +5633,6 @@ class ExportGraphsPointList(generics.ListAPIView):
         date_range = request.query_params.get('date_range')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        print(start_date)
-        print(end_date)
         if end_date is not None:
             end_date = get_datetime_from_date(end_date)
         today = utils.get_current_date()
@@ -5953,7 +5901,6 @@ class ExportGraphsPointList(generics.ListAPIView):
 
             array_length = len(serializer.data)
             outputs = []
-            print(array_length)
             for i in range(array_length):  # Use `xrange` for python 2.
 
                 rows = {
@@ -5987,8 +5934,6 @@ class ActiveJobsAgingSummaryGraph(generics.ListAPIView):
         date_range = request.query_params.get('date_range')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        print(start_date)
-        print(end_date)
         if end_date is not None:
             end_date = get_datetime_from_date(end_date)
         today = utils.get_current_date()
@@ -6006,9 +5951,7 @@ class ActiveJobsAgingSummaryGraph(generics.ListAPIView):
             userGroupDict = dict(groups['groups'][0])
         if userGroupDict is not None:
             userGroup = userGroupDict['name']
-        print(userGroup)
         uid = str(request.user.id).replace("-", "")
-        print(uid)
 
         if userGroup is not None and userGroup == GLOBAL_ROLE.get('ADMIN'):
             if date_range == 'today':
@@ -6107,7 +6050,6 @@ class ActiveJobsAgingSummaryGraph(generics.ListAPIView):
                     [start_date, end_date])
 
         if queryset is not None:
-            print(str(queryset.query))
             # queryset = self.filter_queryset(queryset)
             serializer = ActiveJobsAgingSerializer(queryset, many=True)
             return Response(serializer.data)
@@ -6121,8 +6063,6 @@ class ActiveJobsAgingSummaryTable(generics.ListAPIView):
         date_range = request.query_params.get('date_range')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        print(start_date)
-        print(end_date)
         if end_date is not None:
             end_date = get_datetime_from_date(end_date)
         today = utils.get_current_date()
@@ -6140,9 +6080,7 @@ class ActiveJobsAgingSummaryTable(generics.ListAPIView):
             userGroupDict = dict(groups['groups'][0])
         if userGroupDict is not None:
             userGroup = userGroupDict['name']
-        print(userGroup)
         uid = str(request.user.id).replace("-", "")
-        print(uid)
 
         if userGroup is not None and userGroup == GLOBAL_ROLE.get('ADMIN'):
             if date_range == 'today':
@@ -6256,7 +6194,6 @@ class ActiveJobsAgingSummaryTable(generics.ListAPIView):
                     [start_date, end_date])
 
         if queryset is not None:
-            print(str(queryset.query))
             serializer = ActiveJobsAgingSerializer(queryset, many=True)
             return Response(serializer.data)
 
@@ -6453,7 +6390,6 @@ class UnassignedJobsCSV(generics.ListAPIView):
             serializer = UnassignedJobsSerializer(queryset, many=True)
             array_length = len(serializer.data)
             outputs = []
-            print(array_length)
             for i in range(array_length):  # Use `xrange` for python 2.
 
                 rows = {
@@ -6486,8 +6422,6 @@ class ClientRevenueReport(generics.ListAPIView):
         date_range = request.query_params.get('date_range')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        print(start_date)
-        print(end_date)
         if end_date is not None:
             end_date = get_datetime_from_date(end_date)
         today = utils.get_current_date()
@@ -6505,9 +6439,7 @@ class ClientRevenueReport(generics.ListAPIView):
             userGroupDict = dict(groups['groups'][0])
         if userGroupDict is not None:
             userGroup = userGroupDict['name']
-        print(userGroup)
         uid = str(request.user.id).replace("-", "")
-        print(uid)
 
         if userGroup is not None and userGroup == GLOBAL_ROLE.get('ADMIN'):
             if date_range == 'today':
@@ -6591,11 +6523,7 @@ class ClientRevenueReport(generics.ListAPIView):
                     [start_date, end_date])
 
         if queryset is not None:
-            print(str(queryset.query))
-            # queryset = self.filter_queryset(queryset)
             serializer = ClientRevenueSerializer(queryset, many=True)
-            # print(serializer.data['first_name'])
-            # print(serializer.data)
             return Response(serializer.data)
 
 
@@ -6607,8 +6535,6 @@ class ClientRevenueReportCSV(generics.ListAPIView):
         date_range = request.query_params.get('date_range')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        print(start_date)
-        print(end_date)
         if end_date is not None:
             end_date = get_datetime_from_date(end_date)
         today = utils.get_current_date()
@@ -8748,5 +8674,4 @@ def get_current_job_status(request, country='India', isProd=False):
         finalOutput.append(rows)
 
     return render(request, "get_current_job_status.html", {'data': finalOutput})
-    # return str(queryset.query)
 
