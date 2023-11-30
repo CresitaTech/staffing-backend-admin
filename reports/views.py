@@ -2445,7 +2445,7 @@ class BdmPerformanceSummaryCSV(generics.ListAPIView):
                 'bdm_name': serializer.data[i]['bdm_name'],
                 'job_status': serializer.data[i]['job_status'],
                 'status': serializer.data[i]['status'],
-                'recruiter_name': recruiter_name[0] + ' ' + recruiter_name[1],
+                'recruiter_name': recruiter_name[0] + ' ' + recruiter_name[1] if recruiter_name else "NULL",
                 'client_country': serializer.data[i]['country'],
                 'submission_date': serializer.data[i]['submission_date'],
                 'job_date': serializer.data[i]['job_date'],
@@ -5040,11 +5040,36 @@ class AssingedJobsList(generics.ListAPIView):
                 queryset = queryset[:5]
 
         elif userGroup is not None and userGroup == GLOBAL_ROLE.get('BDMMANAGER'):
-            queryset = jobModel.objects.raw(
-                "SELECT * FROM (SELECT j.id , j.job_title ,j.created_at as posted_date, c.company_name FROM `osms_job_description` as j, `osms_clients` as c WHERE c.id = j.client_name_id AND j.created_by_id = %s) AS A "
-                "LEFT JOIN (SELECT o.job_id_id as id, o.created_at as assinged_date,o.assignee_name , CONCAT(op1.first_name,' ',op1.last_name) as primary_recruiter_name,"
-                " CONCAT(op2.first_name,' ',op2.last_name) as secondary_recruiter_name FROM `job_description_assingment` o INNER JOIN `users_user` op1 on o.primary_recruiter_name_id = op1.id LEFT JOIN `users_user` op2 on o.secondary_recruiter_name_id = op2.id) AS B ON A.id = B.id ORDER BY A.posted_date DESC",
-                [uid])
+            # queryset = jobModel.objects.raw(
+            #     "SELECT * FROM (SELECT j.id , j.job_title ,j.created_at as posted_date, c.company_name FROM `osms_job_description` as j, `osms_clients` as c WHERE c.id = j.client_name_id AND j.created_by_id = %s) AS A "
+            #     "LEFT JOIN (SELECT o.job_id_id as id, o.created_at as assinged_date,o.assignee_name , CONCAT(op1.first_name,' ',op1.last_name) as primary_recruiter_name,"
+            #     " CONCAT(op2.first_name,' ',op2.last_name) as secondary_recruiter_name FROM `job_description_assingment` o INNER JOIN `users_user` op1 on o.primary_recruiter_name_id = op1.id LEFT JOIN `users_user` op2 on o.secondary_recruiter_name_id = op2.id) AS B ON A.id = B.id ORDER BY A.posted_date DESC",
+            #     [uid])
+            
+            query = f"""
+                    SELECT
+                        j.id,
+                        j.job_title,
+                        j.created_at as posted_date,
+                        c.company_name,
+                        o.created_at as assinged_date,
+                        o.assignee_name,
+                        CONCAT(op1.first_name, ' ', op1.last_name) as primary_recruiter_name,
+                        CONCAT(op2.first_name, ' ', op2.last_name) as secondary_recruiter_name
+                    FROM
+                        osms_job_description j
+                        INNER JOIN osms_clients c ON j.client_name_id = c.id
+                        LEFT JOIN job_description_assingment o ON j.id = o.job_id_id
+                        LEFT JOIN users_user op1 ON o.primary_recruiter_name_id = op1.id
+                        LEFT JOIN users_user op2 ON o.secondary_recruiter_name_id = op2.id
+                    WHERE
+                        j.created_by_id = %s
+                    ORDER BY
+                        j.created_at DESC;
+                """
+
+            queryset = jobModel.objects.raw(query, [uid])
+            
             
             is_dashboard_param = request.query_params.get("is_dashboard", None)
             if is_dashboard_param == "true":
