@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import logging.config
 import logging
+from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -348,11 +349,11 @@ DBBACKUP_STORAGE_OPTIONS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'staffingapp',
-        'USER': 'Nareshkhuriwal',
-        'PASSWORD': 'Naresh@2252',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
         'OPTIONS': {'charset': 'utf8mb4',
                     "init_command": "SET foreign_key_checks = 0;"
                     },
