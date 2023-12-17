@@ -503,4 +503,4 @@ LOGGING = {
     }
 }
 
-logging.config.dictConfig(LOGGING)
+# logging.config.dictConfig(LOGGING)
