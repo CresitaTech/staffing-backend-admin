@@ -59,10 +59,6 @@ DEBUG = True
 	'http://localhost:4200'
 ]"""
 
-CORS_ALLOWED_ORIGINS = [
-    '*',
-]
-
 ALLOWED_HOSTS = ['*']
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
