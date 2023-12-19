@@ -4821,7 +4821,14 @@ class ClinetDropdownList(generics.ListAPIView):
         user_token = request.META.get('HTTP_AUTHORIZATION', '').split(' ')[1]
         token = Token.objects.get(key=user_token)
         user = token.user
-        sql = "SELECT id, company_name FROM osms_clients where primary_email=%s"
+        if user.role == 9:
+           # If user has role 9, fetch email-specific records
+            sql = "SELECT id, company_name FROM osms_clients WHERE primary_email = %s"
+            queryset = clientModel.objects.raw(sql, [user.email])
+        else:
+           # If user has a role other than 9, fetch all records
+           sql = "SELECT id, company_name FROM osms_clients"
+           queryset = clientModel.objects.raw(sql)
        
         queryset = clientModel.objects.raw(sql,[user.email])
         print(queryset)
