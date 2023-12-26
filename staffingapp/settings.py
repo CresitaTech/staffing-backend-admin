@@ -314,9 +314,12 @@ ROOT_URLCONF = 'staffingapp.urls'
 CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:4200',
-    'https://staff.opallius.com',
-]
+     'http://localhost:4200',
+     'https://staff.opallius.com',
+     'http://164.68.100.175:4202',
+     'https://staging.opallius.com',
+ ]
+
 
 
 TEMPLATES = [
