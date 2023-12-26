@@ -4829,9 +4829,6 @@ class ClinetDropdownList(generics.ListAPIView):
            # If user has a role other than 9, fetch all records
            sql = "SELECT id, company_name FROM osms_clients"
            queryset = clientModel.objects.raw(sql)
-       
-        queryset = clientModel.objects.raw(sql,[user.email])
-        print(queryset)
         serializer = ClientDropdownListSerializer(queryset, many=True)
         return Response(serializer.data)
 
