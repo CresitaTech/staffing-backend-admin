@@ -51,10 +51,10 @@ def get_recruiter_calls_performance_table_alldata_by_job_id(start_date, end_date
 
     if recruiter_id is not None and (country is not None and country != 'none' and country != 'ALL'):
         recruiter_id = str(recruiter_id).replace("-", "")
-        filterQuery = "cjs.created_by_id = '" + recruiter_id + "' AND ca.country = '" + country + "' AND"
+        filterQuery = "cjs.submitted_by_id = '" + recruiter_id + "' AND ca.country = '" + country + "' AND"
     elif recruiter_id is not None:
         recruiter_id = str(recruiter_id).replace("-", "")
-        filterQuery = "cjs.created_by_id = '" + recruiter_id + "' AND"
+        filterQuery = "cjs.submitted_by_id = '" + recruiter_id + "' AND"
     elif country is not None and country != 'none' and country != 'ALL':
         filterQuery = "ca.country = '" + country + "' AND"
 
@@ -65,7 +65,7 @@ def get_recruiter_calls_performance_table_alldata_by_job_id(start_date, end_date
             "LEFT JOIN osms_job_description as j ON j.id = cjs.job_description_id LEFT JOIN " \
             "job_description_assingment as jda ON j.id = jda.job_id_id LEFT JOIN osms_candidates as ca ON " \
             "cjs.`candidate_name_id` = ca.id LEFT JOIN candidates_stages as cs ON cs.id = cjs.stage_id LEFT JOIN " \
-            "users_user as u ON cjs.created_by_id = u.id WHERE cs.stage_name != 'Candidate Added' AND " \
+            "users_user as u ON cjs.submitted_by_id = u.id WHERE cs.stage_name != 'Candidate Added' AND " \
             " "+filterQuery+" (cjs.submission_date >= '"+str(start_date)+"' " \
             " AND cjs.submission_date <= '"+str(end_date)+"') group by cjs.id "
 

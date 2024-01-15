@@ -982,7 +982,6 @@ class CandidatesJobStagesViewSet(viewsets.ModelViewSet):
 
         serializeObj = CandidateJobsStagesWriteSerializer(candObj, data=request.data, context={'request': request})
         if serializeObj.is_valid():
-            # logger.info('serializeObj data: ' + str(serializeObj.data))
 
             # obj = serializeObj.save(updated_by_id=request.user.id)
             # submission_datetime = serializeObj.data['submission_date'] + ' ' + utils.getCurrentTime()

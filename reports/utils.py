@@ -248,7 +248,7 @@ def generateRecruiterCallsSummaryTableByDatewiseAndIdCsvQuery(start_date, end_da
         start_date) + "' AND " \
                       "cjs.submission_date <= '" + str(
         end_date) + "' AND cjs.stage_id = s.id AND s.stage_name != 'Candidate Added' AND cjs.job_description_id = j.id AND " \
-                    "cjs.candidate_name_id = ca.id AND cjs.created_by_id = u.id GROUP BY u.id ) AS B ON A.id = B.rid "
+                    "cjs.candidate_name_id = ca.id AND cjs.submitted_by_id = u.id GROUP BY u.id ) AS B ON A.id = B.rid "
 
     where2 = "LEFT JOIN (select u.id as rrid, " + str(
         internalFormulaFields()) + " from `osms_job_description` as j , `osms_candidates` as ca , `candidates_stages` as s , " \
