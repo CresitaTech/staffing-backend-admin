@@ -373,7 +373,7 @@ def recruiter_calls_performance_summary_by_job_and_recruiter(start_date, end_dat
         start_date) + "' " \
                       "AND cjs.submission_date <= '" + str(
         end_date) + "' AND cjs.stage_id = s.id AND cjs.job_description_id = j.id AND " \
-                    "cjs.candidate_name_id = ca.id AND cjs.created_by_id = '"+ recruiter_id +"' GROUP BY j.id ) AS B ON A.id = B.job_id "
+                    "cjs.candidate_name_id = ca.id AND cjs.submitted_by_id = '"+ recruiter_id +"' GROUP BY j.id ) AS B ON A.id = B.job_id "
 
     selectStmtC = "LEFT JOIN (select j.id as jobid, " + internalFormulaFields() + ", cjs.notes as remarks from `osms_job_description` as j , `osms_candidates` as ca , " \
                                                                            "`candidates_stages` as s , `internal_candidates_jobs_stages` as cjs WHERE cjs.submission_date >= '" + str(
