@@ -2679,6 +2679,7 @@ class JobSummaryTable(generics.ListAPIView):
         yesterday = utils.yesterday_datetime()
         week_start, week_end = utils.week_date_range()
         month_start, month_end = utils.month_date_range()
+        month_start, month_end = month_start.replace(" 00:00:00", ""), month_end.replace(" 23:59:59", "")
 
         candObj = User.objects.get(pk=request.user.id)
         serializeObj = UserSerializer(candObj)
