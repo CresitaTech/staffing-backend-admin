@@ -6851,7 +6851,7 @@ def send_bdm_email(country='India', isProd=False):
             for i in range(len(user_serializer.data)):
                 bdm_emails.append(user_serializer.data[i]['email'])
         else:
-            bdm_emails.append('kuriwaln@opallios.com')
+            bdm_emails.append('singhr@opallios.com')
             # bdm_emails.append('mathurp@opallios.com')
 
         output = []
@@ -6889,9 +6889,9 @@ def send_bdm_email(country='India', isProd=False):
                              from_email=EMAIL_FROM_USER, to=bdm_emails)  # bdm_emails
         email.content_subtype = 'html'
         if isProd:
-            email.cc = ['mathurp@opallios.com', 'girish@opallios.com', 'paradkaro@opallios.com',
+            email.cc = ['singhr@opallios.com', 'paradkaro@opallios.com',
                         'minglaniy@opallios.com',
-                        'kuriwaln@opallios.com']
+                        'singha@cresitatech.com']
         email.send()
 
         return str(queryset.query)
