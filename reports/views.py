@@ -6924,8 +6924,8 @@ def send_recruiter_summary_report(country='US', isProd=False):
         "SELECT ca.id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, cl.company_name AS client_name ,ca.primary_email, ca.primary_phone_number,"
         "CONCAT(u1.first_name,' ',u1.last_name) as bdm_name , CONCAT(u2.first_name,' ',u2.last_name) as recruiter_name , u2.country as location , j.job_title, j.min_salary ,j.max_salary ,j.min_rate ,j.max_rate, ca.created_at, ca.created_at as attempted_calls FROM"
         "`osms_job_description` as j,`users_user` as u1, users_user as u2 , `osms_clients` as cl, `osms_candidates` as ca, `candidates_stages` as s, "
-        "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND cjs.created_by_id = u2.id AND s.stage_name = 'Candidate Added' AND "
-        "j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND ca.id = cjs.candidate_name_id AND cjs.submission_date >= %s AND cjs.submission_date <= %s AND u2.country IN %s ORDER BY recruiter_name",
+        "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND ca.created_by_id = u2.id AND s.stage_name = 'Candidate Added' AND "
+        "j.client_name_id = cl.id and j.id = cjs.job_description_id AND '6bef719201044e31bff16948707fdc88' = s.id AND ca.id = cjs.candidate_name_id AND cjs.submission_date >= %s AND cjs.submission_date <= %s AND u2.country IN %s ORDER BY recruiter_name",
         [start_date, end_date, user_countries])
 
     output = []
@@ -6943,7 +6943,7 @@ def send_recruiter_summary_report(country='US', isProd=False):
             for i in range(len(user_serializer.data)):
                 recruiter_emails.append(user_serializer.data[i]['email'])
         else:
-            recruiter_emails.append('kuriwaln@opallios.com')
+            recruiter_emails.append('singha@cresitatech.com')
             # recruiter_emails.append('mathurp@opallios.com')
         bdmqueryset = User.objects.raw(
             "SELECT id, email, country from users_user where role = '9' AND is_active = '1' AND country IN %s",
@@ -7018,9 +7018,9 @@ def send_recruiter_summary_report(country='US', isProd=False):
             from_email=EMAIL_FROM_USER, to=recruiter_emails)
         email.content_subtype = 'html'
         if isProd:
-            email.cc = ['mathurp@opallios.com', 'girish@opallios.com', 'paradkaro@opallios.com',
+            email.cc = ['singhr@opallios.com', 'singha@cresitatech.com', 'paradkaro@opallios.com',
                         'minglaniy@opallios.com',
-                        'kuriwaln@opallios.com', 'ats@opallios.com'] + bdm_emails + both_country
+                        'ats@opallios.com'] + bdm_emails + both_country
         email.send()
         print('Email Send Successfully !!!!!!!!')
 
