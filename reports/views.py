@@ -8254,7 +8254,7 @@ def send_last_48hours_bdm_jobs(country='India', isProd=False):
         message = render_to_string('bdm__jobs_posted_in_last_48_hours.html',
                                    {'data': finalOutput, 'jobs_posted': jobs_posted})
         email = EmailMessage(
-            subject="Jobs Posted by BDMs in Last 48 Hours: ({0} to {1})".format(str(start_date).split(' ')[0],
+            subject="Jobs Posted by BDMs and  recruiter managers in Last 48 Hours: ({0} to {1})".format(str(start_date).split(' ')[0],
                                                                                 str(today_date).split(' ')[0]),
             body=message,
             from_email=EMAIL_FROM_USER, to=["vibhuti@opallioslabs.com"])
