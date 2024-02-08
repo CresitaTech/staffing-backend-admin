@@ -6677,10 +6677,9 @@ class ClientRevenueReportCSV(generics.ListAPIView):
 # daily mail sending method
 def send_recruiter_email(country='India', isProd=False, finalOutput=None): # request,
     today_date = utils.get_current_datetime()
-    # start_date = utils.get_current_date()
     start_date, end_date = utils.get_daily_report_start_and_end_datetime(country)
-    # start_date = "2022-10-20 06:30:00"
-    # end_date = "2022-10-20 22:30:59"
+    # start_date = "2024-02-07 00:30:00"
+    # end_date = "2024-02-07 22:30:59"
 
     both_country = []
     user_countries = [country, 'Both']
@@ -6693,7 +6692,7 @@ def send_recruiter_email(country='India', isProd=False, finalOutput=None): # req
         "recruiter_name , u2.country as location , j.job_title, j.min_salary ,j.max_salary ,j.min_rate ,j.max_rate, "
         "ca.created_at, (SELECT SUM(rc.attempted_calls) FROM recruiter_calls as rc WHERE rc.created_at >= %s AND rc.created_at <= %s AND u2.external_user = rc.recruiter_name ) as attempted_calls FROM "
         "`osms_job_description` as j,`users_user` as u1, users_user as u2 , `osms_clients` as cl, `osms_candidates` as ca, `candidates_stages` as s, "
-        "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND cjs.created_by_id = u2.id AND s.stage_name != 'Candidate Added' AND "
+        "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND cjs.submitted_by_id = u2.id AND s.stage_name != 'Candidate Added' AND "
         "j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND ca.id = cjs.candidate_name_id AND cjs.submission_date >= %s AND cjs.submission_date <= %s AND u2.country IN %s ORDER BY recruiter_name",
         [start_date, end_date, start_date, end_date, user_countries])
     
@@ -6720,11 +6719,11 @@ def send_recruiter_email(country='India', isProd=False, finalOutput=None): # req
             "SELECT u.id, u.first_name, (SELECT SUM(rc.attempted_calls) FROM recruiter_calls as rc WHERE "
             "rc.created_at >= %s AND rc.created_at <= %s AND u.external_user = rc.recruiter_name ) as attempted_calls "
             "FROM users_user as u WHERE u.role = 3 AND u.is_active = 1 AND u.country IN %s "
-            "AND u.id NOT IN (SELECT cjs.created_by_id FROM `candidates_jobs_stages` as cjs, users_user as u, "
-            "`candidates_stages` as s WHERE u.id = cjs.created_by_id AND "
+            "AND u.id NOT IN (SELECT cjs.submitted_by_id FROM `candidates_jobs_stages` as cjs, users_user as u, "
+            "`candidates_stages` as s WHERE u.id = cjs.submitted_by_id AND "
             "cjs.stage_id = s.id AND s.stage_name != 'Candidate Added' AND u.role = "
             "3 AND cjs.submission_date >= %s and cjs.submission_date <= "
-            "%s GROUP BY cjs.created_by_id)", [start_date, end_date, user_countries, start_date, end_date])
+            "%s GROUP BY cjs.submitted_by_id)", [start_date, end_date, user_countries, start_date, end_date])
         
         no_submission_user_serializer = NoSubmissionSerializer(no_submission_user, many=True)
         logger.info("====================================================: " )
@@ -6811,15 +6810,14 @@ def send_recruiter_email(country='India', isProd=False, finalOutput=None): # req
                              from_email=EMAIL_FROM_USER, to=recruiter_emails)  # recruiter_emails
         email.content_subtype = 'html'
         if isProd:
-            email.cc = ['mathurp@opallios.com', 'girish@opallios.com', 'paradkaro@opallios.com',
+            email.cc = ['paradkaro@opallios.com',
                         'minglaniy@opallios.com',
-                        'kuriwaln@opallios.com'] + bdm_emails + both_country
+                        'singhr@opallios.com', 'singha@cresitatech.com', 'viraj@cresitatech.com'] + bdm_emails + both_country
         email.send()
         print('Email Send Successfully !!!!!!!!')
         
         return str(queryset.query)
         # return render(request, "recruiter_email_report.html", {'data': output, 'no_submission': submission_output})
-
 
 def send_bdm_email(country='India', isProd=False):
     today_date = utils.get_current_datetime()
