@@ -8186,8 +8186,8 @@ def send_last_48hours_bdm_jobs(country='India', isProd=False):
             for i in range(len(user_serializer.data)):
                 bdm_emails.append(user_serializer.data[i]['email'])
         else:
-            bdm_emails.append('kuriwaln@opallios.com')
-            bdm_emails.append('mathurp@opallios.com')
+            bdm_emails.append('singhr@opallios.com')
+            bdm_emails.append('singha@cresitatech.com')
             # bdm_emails.append('minglaniy@opallios.com')
 
         output = []
@@ -8260,7 +8260,7 @@ def send_last_48hours_bdm_jobs(country='India', isProd=False):
             from_email=EMAIL_FROM_USER, to=["vibhuti@opallioslabs.com"])
         email.content_subtype = 'html'
         if isProd:
-            email.cc = ['paradkaro@opallios.com', 'minglaniy@opallios.com', 'kuriwaln@opallios.com']
+            email.cc = ['paradkaro@opallios.com', 'minglaniy@opallios.com', 'singha@cresitatech.com']
         email.send()
         logger.info('Email Send Successfully !!!!!!!!')
         # return render(request, "bdm__jobs_posted_in_last_48_hours.html", {'data': finalOutput, 'df': str(queryset.query), 'jobs_posted': jobs_posted})
