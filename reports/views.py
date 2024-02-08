@@ -6677,10 +6677,9 @@ class ClientRevenueReportCSV(generics.ListAPIView):
 # daily mail sending method
 def send_recruiter_email(country='India', isProd=False, finalOutput=None): # request,
     today_date = utils.get_current_datetime()
-    # start_date = utils.get_current_date()
     start_date, end_date = utils.get_daily_report_start_and_end_datetime(country)
-    # start_date = "2022-10-20 06:30:00"
-    # end_date = "2022-10-20 22:30:59"
+    # start_date = "2024-02-07 00:30:00"
+    # end_date = "2024-02-07 22:30:59"
 
     both_country = []
     user_countries = [country, 'Both']
@@ -6693,7 +6692,7 @@ def send_recruiter_email(country='India', isProd=False, finalOutput=None): # req
         "recruiter_name , u2.country as location , j.job_title, j.min_salary ,j.max_salary ,j.min_rate ,j.max_rate, "
         "ca.created_at, (SELECT SUM(rc.attempted_calls) FROM recruiter_calls as rc WHERE rc.created_at >= %s AND rc.created_at <= %s AND u2.external_user = rc.recruiter_name ) as attempted_calls FROM "
         "`osms_job_description` as j,`users_user` as u1, users_user as u2 , `osms_clients` as cl, `osms_candidates` as ca, `candidates_stages` as s, "
-        "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND cjs.created_by_id = u2.id AND s.stage_name != 'Candidate Added' AND "
+        "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND cjs.submitted_by_id = u2.id AND s.stage_name != 'Candidate Added' AND "
         "j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND ca.id = cjs.candidate_name_id AND cjs.submission_date >= %s AND cjs.submission_date <= %s AND u2.country IN %s ORDER BY recruiter_name",
         [start_date, end_date, start_date, end_date, user_countries])
     
@@ -6720,11 +6719,11 @@ def send_recruiter_email(country='India', isProd=False, finalOutput=None): # req
             "SELECT u.id, u.first_name, (SELECT SUM(rc.attempted_calls) FROM recruiter_calls as rc WHERE "
             "rc.created_at >= %s AND rc.created_at <= %s AND u.external_user = rc.recruiter_name ) as attempted_calls "
             "FROM users_user as u WHERE u.role = 3 AND u.is_active = 1 AND u.country IN %s "
-            "AND u.id NOT IN (SELECT cjs.created_by_id FROM `candidates_jobs_stages` as cjs, users_user as u, "
-            "`candidates_stages` as s WHERE u.id = cjs.created_by_id AND "
+            "AND u.id NOT IN (SELECT cjs.submitted_by_id FROM `candidates_jobs_stages` as cjs, users_user as u, "
+            "`candidates_stages` as s WHERE u.id = cjs.submitted_by_id AND "
             "cjs.stage_id = s.id AND s.stage_name != 'Candidate Added' AND u.role = "
             "3 AND cjs.submission_date >= %s and cjs.submission_date <= "
-            "%s GROUP BY cjs.created_by_id)", [start_date, end_date, user_countries, start_date, end_date])
+            "%s GROUP BY cjs.submitted_by_id)", [start_date, end_date, user_countries, start_date, end_date])
         
         no_submission_user_serializer = NoSubmissionSerializer(no_submission_user, many=True)
         logger.info("====================================================: " )
@@ -6811,15 +6810,14 @@ def send_recruiter_email(country='India', isProd=False, finalOutput=None): # req
                              from_email=EMAIL_FROM_USER, to=recruiter_emails)  # recruiter_emails
         email.content_subtype = 'html'
         if isProd:
-            email.cc = ['mathurp@opallios.com', 'girish@opallios.com', 'paradkaro@opallios.com',
+            email.cc = ['paradkaro@opallios.com',
                         'minglaniy@opallios.com',
-                        'kuriwaln@opallios.com'] + bdm_emails + both_country
+                        'singhr@opallios.com', 'singha@cresitatech.com', 'viraj@cresitatech.com'] + bdm_emails + both_country
         email.send()
         print('Email Send Successfully !!!!!!!!')
         
         return str(queryset.query)
         # return render(request, "recruiter_email_report.html", {'data': output, 'no_submission': submission_output})
-
 
 def send_bdm_email(country='India', isProd=False):
     today_date = utils.get_current_datetime()
@@ -6853,7 +6851,7 @@ def send_bdm_email(country='India', isProd=False):
             for i in range(len(user_serializer.data)):
                 bdm_emails.append(user_serializer.data[i]['email'])
         else:
-            bdm_emails.append('kuriwaln@opallios.com')
+            bdm_emails.append('singhr@opallios.com')
             # bdm_emails.append('mathurp@opallios.com')
 
         output = []
@@ -6891,9 +6889,9 @@ def send_bdm_email(country='India', isProd=False):
                              from_email=EMAIL_FROM_USER, to=bdm_emails)  # bdm_emails
         email.content_subtype = 'html'
         if isProd:
-            email.cc = ['mathurp@opallios.com', 'girish@opallios.com', 'paradkaro@opallios.com',
+            email.cc = ['singhr@opallios.com', 'paradkaro@opallios.com',
                         'minglaniy@opallios.com',
-                        'kuriwaln@opallios.com']
+                        'singha@cresitatech.com']
         email.send()
 
         return str(queryset.query)
@@ -6926,8 +6924,8 @@ def send_recruiter_summary_report(country='US', isProd=False):
         "SELECT ca.id, CONCAT(ca.first_name, ' ' , ca.last_name) as candidate_name, cl.company_name AS client_name ,ca.primary_email, ca.primary_phone_number,"
         "CONCAT(u1.first_name,' ',u1.last_name) as bdm_name , CONCAT(u2.first_name,' ',u2.last_name) as recruiter_name , u2.country as location , j.job_title, j.min_salary ,j.max_salary ,j.min_rate ,j.max_rate, ca.created_at, ca.created_at as attempted_calls FROM"
         "`osms_job_description` as j,`users_user` as u1, users_user as u2 , `osms_clients` as cl, `osms_candidates` as ca, `candidates_stages` as s, "
-        "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND cjs.created_by_id = u2.id AND s.stage_name = 'Candidate Added' AND "
-        "j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND ca.id = cjs.candidate_name_id AND cjs.submission_date >= %s AND cjs.submission_date <= %s AND u2.country IN %s ORDER BY recruiter_name",
+        "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND ca.created_by_id = u2.id AND s.stage_name = 'Candidate Added' AND "
+        "j.client_name_id = cl.id and j.id = cjs.job_description_id AND '6bef719201044e31bff16948707fdc88' = s.id AND ca.id = cjs.candidate_name_id AND cjs.submission_date >= %s AND cjs.submission_date <= %s AND u2.country IN %s ORDER BY recruiter_name",
         [start_date, end_date, user_countries])
 
     output = []
@@ -6945,7 +6943,7 @@ def send_recruiter_summary_report(country='US', isProd=False):
             for i in range(len(user_serializer.data)):
                 recruiter_emails.append(user_serializer.data[i]['email'])
         else:
-            recruiter_emails.append('kuriwaln@opallios.com')
+            recruiter_emails.append('singha@cresitatech.com')
             # recruiter_emails.append('mathurp@opallios.com')
         bdmqueryset = User.objects.raw(
             "SELECT id, email, country from users_user where role = '9' AND is_active = '1' AND country IN %s",
@@ -7020,9 +7018,9 @@ def send_recruiter_summary_report(country='US', isProd=False):
             from_email=EMAIL_FROM_USER, to=recruiter_emails)
         email.content_subtype = 'html'
         if isProd:
-            email.cc = ['mathurp@opallios.com', 'girish@opallios.com', 'paradkaro@opallios.com',
+            email.cc = ['singhr@opallios.com', 'singha@cresitatech.com', 'paradkaro@opallios.com',
                         'minglaniy@opallios.com',
-                        'kuriwaln@opallios.com', 'ats@opallios.com'] + bdm_emails + both_country
+                        'ats@opallios.com'] + bdm_emails + both_country
         email.send()
         print('Email Send Successfully !!!!!!!!')
 
@@ -8188,8 +8186,8 @@ def send_last_48hours_bdm_jobs(country='India', isProd=False):
             for i in range(len(user_serializer.data)):
                 bdm_emails.append(user_serializer.data[i]['email'])
         else:
-            bdm_emails.append('kuriwaln@opallios.com')
-            bdm_emails.append('mathurp@opallios.com')
+            bdm_emails.append('singhr@opallios.com')
+            bdm_emails.append('singha@cresitatech.com')
             # bdm_emails.append('minglaniy@opallios.com')
 
         output = []
@@ -8262,7 +8260,7 @@ def send_last_48hours_bdm_jobs(country='India', isProd=False):
             from_email=EMAIL_FROM_USER, to=["vibhuti@opallioslabs.com"])
         email.content_subtype = 'html'
         if isProd:
-            email.cc = ['paradkaro@opallios.com', 'minglaniy@opallios.com', 'kuriwaln@opallios.com']
+            email.cc = ['paradkaro@opallios.com', 'minglaniy@opallios.com', 'singha@cresitatech.com']
         email.send()
         logger.info('Email Send Successfully !!!!!!!!')
         # return render(request, "bdm__jobs_posted_in_last_48_hours.html", {'data': finalOutput, 'df': str(queryset.query), 'jobs_posted': jobs_posted})
