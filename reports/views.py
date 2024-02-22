@@ -7197,7 +7197,7 @@ def bdm_daily_submission_report(country='India', isProd=False):
                     email.attach_file(item.get('resume'))
 
             if isProd:
-                email.cc = ['paradkaro@opallios.com', 'minglaniy@opallios.com', 'kuriwaln@opallios.com',
+                email.cc = ['paradkaro@opallios.com', 'minglaniy@opallios.com',
                             'singhr@opallios.com', 'singha@cresitatech.com', 'viraj@cresitatech.com']
             email.send()
             logger.info('Email Send Successfully !!!!!!!!')
