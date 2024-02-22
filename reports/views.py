@@ -6712,7 +6712,7 @@ def send_recruiter_email(country='India', isProd=False, finalOutput=None): # req
             for i in range(len(user_serializer.data)):
                 recruiter_emails.append(user_serializer.data[i]['email'])
         else:
-            recruiter_emails.append('kuriwaln@opallios.com')
+            recruiter_emails.append('singhr@opallios.com')
             # recruiter_emails.append('mathurp@opallios.com')
 
         no_submission_user = User.objects.raw(
@@ -7020,7 +7020,7 @@ def send_recruiter_summary_report(country='US', isProd=False):
         if isProd:
             email.cc = ['singhr@opallios.com', 'singha@cresitatech.com', 'paradkaro@opallios.com',
                         'minglaniy@opallios.com',
-                        'ats@opallios.com'] + bdm_emails + both_country
+                        'ats@opallios.com', 'viraj@cresitatech.com'] + bdm_emails + both_country
         email.send()
         print('Email Send Successfully !!!!!!!!')
 
@@ -7198,7 +7198,7 @@ def bdm_daily_submission_report(country='India', isProd=False):
 
             if isProd:
                 email.cc = ['paradkaro@opallios.com', 'minglaniy@opallios.com', 'kuriwaln@opallios.com',
-                            'mathurp@opallios.com']
+                            'singhr@opallios.com', 'singha@cresitatech.com', 'viraj@cresitatech.com']
             email.send()
             logger.info('Email Send Successfully !!!!!!!!')
 
@@ -8289,7 +8289,7 @@ def send_weekly_recruiter_submission_follow_up(country='India', isProd=False):
         "j.min_rate ,j.max_rate, ca.created_at, s.stage_name, cjs.updated_at, j.employment_type_description as job_type, j.location  FROM "
         "`osms_job_description` as j,`users_user` as u1, users_user as u2 , `osms_clients` as cl, `osms_candidates` "
         "as ca, `candidates_stages` as s, "
-        "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND ca.created_by_id = u2.id AND s.stage_name "
+        "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND cjs.submitted_by_id = u2.id AND s.stage_name "
         "!= 'Candidate Added' AND cjs.updated_at <=  NOW() - INTERVAL 3 DAY AND j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND ca.id = "
         "cjs.candidate_name_id AND cjs.submission_date >= %s AND cjs.submission_date <= %s AND u2.country IN %s ORDER "
         "BY client_name, j.job_title, cjs.submission_date DESC",
@@ -8459,7 +8459,7 @@ def send_weekly_recruiter_submission_follow_up(country='India', isProd=False):
         "job_type, j.location  FROM "
         "`osms_job_description` as j,`users_user` as u1, users_user as u2 , `osms_clients` as cl, `osms_candidates` "
         "as ca, `candidates_stages` as s, "
-        "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND ca.created_by_id = u2.id AND s.stage_name "
+        "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND cjs.submitted_by_id = u2.id AND s.stage_name "
         "!= 'Candidate Added' AND s.stage_name NOT LIKE %s AND cjs.updated_at <=  NOW() - INTERVAL 3 DAY AND "
         "j.client_name_id = cl.id and j.id = cjs.job_description_id AND cjs.stage_id = s.id AND ca.id = "
         "cjs.candidate_name_id AND cjs.submission_date >= %s AND cjs.submission_date <= %s AND u2.country IN %s ORDER "
@@ -8565,7 +8565,7 @@ def send_weekly_recruiter_submission_follow_up(country='India', isProd=False):
                     "SELECT u1.id, CONCAT(u1.first_name,' ',u1.last_name) as bdm_name, COUNT(s.stage_name) as "
                     "total_submissions FROM `osms_job_description` as j,`users_user` as u1, users_user as u2, "
                     "`osms_clients` as cl, `osms_candidates` as ca, `candidates_stages` as s, "
-                    "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND ca.created_by_id = u2.id AND "
+                    "`candidates_jobs_stages` as cjs WHERE j.created_by_id = u1.id AND cjs.submitted_by_id = u2.id AND "
                     "s.stage_name IN %s AND j.client_name_id = cl.id and j.id = cjs.job_description_id "
                     "AND cjs.stage_id = s.id AND ca.id = cjs.candidate_name_id AND cjs.submission_date >= %s AND "
                     "cjs.submission_date <= %s AND u2.country IN %s AND u1.id = %s GROUP BY bdm_name ORDER BY bdm_name, "
@@ -8588,9 +8588,9 @@ def send_weekly_recruiter_submission_follow_up(country='India', isProd=False):
 
         # finalOutput = sorted(finalOutput, key=lambda d: sortDic(d['user_data']), reverse=True)
 
-        sendTo = ['mathurp@opallios.com', 'paradkaro@opallios.com',
+        sendTo = ['singhr@opallios.com', 'paradkaro@opallios.com',
                   'minglaniy@opallios.com',
-                  'kuriwaln@opallios.com']
+                  'singha@cresitatech.com', 'viraj@cresitatech.com']
         message = render_to_string('recruiter_weekly_submission_follow_up_report.html',
                                    {'data': finalOutput, 'summaryOutput': summaryOutput})
         email = EmailMessage(subject="BDM Follow Up Summary: {0} to {1}".format(str(start_date).split(' ')[0],
