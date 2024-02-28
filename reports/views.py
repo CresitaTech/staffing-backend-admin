@@ -5589,8 +5589,7 @@ class JobsByBDMSummaryGraph(generics.ListAPIView):
                     "SELECT a.id, a.created_at, CONCAT(u.first_name, ' ' , u.last_name) AS bdm_name ,a.created_by_id as bdm_id , COUNT(a.id) AS total_count FROM osms_job_description as a , users_user as u WHERE u.id = a.created_by_id AND a.created_at >= %s AND a.created_at <= %s GROUP BY DATE(a.created_at), bdm_name",
                     [month_start, month_end])
             elif start_date is not None and end_date is not None:
-                if (datetime.datetime.strptime(end_date, '%Y-%m-%d').date() - datetime.datetime.strptime(start_date,
-                                                                                                         '%Y-%m-%d').date()).days > 30:
+                if utils.get_number_of_days(end_date, start_date) > 30:
                     queryset = jobModel.objects.raw(
                         "SELECT a.id, MONTHNAME(a.created_at) AS month, CONCAT(u.first_name, ' ' , u.last_name) AS bdm_name ,a.created_by_id as bdm_id , COUNT(a.id) AS total_count FROM osms_job_description as a , users_user as u WHERE u.id = a.created_by_id AND a.created_at >= %s AND a.created_at <= %s GROUP BY MONTHNAME(a.created_at) , bdm_name",
                         [start_date, end_date])
@@ -5617,8 +5616,7 @@ class JobsByBDMSummaryGraph(generics.ListAPIView):
                     "SELECT a.id, a.created_at, CONCAT(u.first_name, ' ' , u.last_name) AS bdm_name ,a.created_by_id as bdm_id , COUNT(a.id) AS total_count FROM osms_job_description as a , users_user as u WHERE u.id = a.created_by_id AND a.created_at >= %s AND a.created_at <= %s GROUP BY DATE(a.created_at), bdm_name",
                     [month_start, month_end])
             elif start_date is not None and end_date is not None:
-                if (datetime.datetime.strptime(end_date, '%Y-%m-%d').date() - datetime.datetime.strptime(start_date,
-                                                                                                         '%Y-%m-%d').date()).days > 30:
+                if utils.get_number_of_days(end_date, start_date) > 30:
                     queryset = jobModel.objects.raw(
                         "SELECT a.id, MONTHNAME(a.created_at) AS month, CONCAT(u.first_name, ' ' , u.last_name) AS bdm_name ,a.created_by_id as bdm_id , COUNT(a.id) AS total_count FROM osms_job_description as a , users_user as u WHERE u.id = a.created_by_id AND a.created_at >= %s AND a.created_at <= %s GROUP BY MONTHNAME(a.created_at) , bdm_name",
                         [start_date, end_date])
@@ -7549,7 +7547,7 @@ def send_daily_bdm_jobs_summary(country='India', isProd=False):
         else:
             email.cc = ['mathurp@opallios.com']"""
 
-        email.cc = ['mathurp@opallios.com']
+        email.cc = ['singha@cresitatech.com']
         email.send()
         logger.info('Email Send Successfully !!!!!!!!')
         # return render(request, "bdm_daily_jobs_summary_report.html",

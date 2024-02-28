@@ -1810,7 +1810,7 @@ class ExportCandidateModel(viewsets.ModelViewSet):
                   'recruiter_name', 'created_by_id', 'updated_by_id', 'created_at', 'updated_at',
                   'candidatesjobdescription', 'updated_by', 'created_by', 'jobsubmissionmodel', 'job_description',
                   'placementcardmodel', 'interviewsmodel', 'candidatessubmissionmodel', 'stage', 'designation',
-                  'feedbackmodel', 'rtrmodel', 'activitystatusmodel', 'candidatesrepositerymodel']
+                  'feedbackmodel', 'rtrmodel', 'activitystatusmodel', 'candidatesrepositerymodel', 'candidateresumesmodel', 'internalcandidatesjobdescription']
 
         # fields = None
         path = os.path.join(os.path.dirname(BASE_DIR), 'media_csv')
