@@ -189,61 +189,61 @@ INSTALLED_APPS = [
 CRONJOBS = [
     # For test health check
     # ('*/1 * * * *', 'staffingapp.cron.heartbeat_check', ['India', True], {'delay': 4}, '>> /var/log/scheduled_job.log'),
-    ('30 7 * * *', 'staffingapp.cron.database_daily_backup', '>> /var/log/scheduled_job.log'),
+    ('00 3 * * *', 'staffingapp.cron.database_daily_backup', '>> /var/log/scheduled_job.log'),
     # Daily report for India
     (
-    '30 22 * * mon,tue,wed,thu,fri', 'staffingapp.cron.generate_daily_submission_report_for_recruiter', ['India', True],
+    '00 18 * * mon,tue,wed,thu,fri', 'staffingapp.cron.generate_daily_submission_report_for_recruiter', ['India', True],
     {'delay': 4}, '>> /var/log/scheduled_job.log'),
-    ('31 22 * * mon,tue,wed,thu,fri', 'staffingapp.cron.generate_daily_job_report_for_bdm', ['India', True],
+    ('01 18 * * mon,tue,wed,thu,fri', 'staffingapp.cron.generate_daily_job_report_for_bdm', ['India', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
-    ('32 22 * * mon,tue,wed,thu,fri', 'staffingapp.cron.generate_daily__recruiter_summary_report', ['India', True],
+    ('02 18 * * mon,tue,wed,thu,fri', 'staffingapp.cron.generate_daily__recruiter_summary_report', ['India', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
 
-    ('30 9 * * mon,tue,wed,thu,fri,sat', 'staffingapp.cron.sendmail_last_48hours_bdm_jobs', ['India', True],
+    ('00 5 * * mon,tue,wed,thu,fri,sat', 'staffingapp.cron.sendmail_last_48hours_bdm_jobs', ['India', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
     #('30 18 * * mon,tue,wed,thu,fri,sat', 'staffingapp.cron.generate_bdm_daily_submission_report', ['India', True],
     # {'delay': 4}, '>> /var/log/scheduled_job.log'),
-    ('01 17 * * wed,fri', 'staffingapp.cron.generate_send_weekly_recruiter_submission_follow_up', ['India', True],
+    ('00 13 * * wed,fri', 'staffingapp.cron.generate_send_weekly_recruiter_submission_follow_up', ['India', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
-    ('45 17 * * mon,tue,wed,thu,fri', 'staffingapp.cron.send_daily_bdm_jobs_summary_report', ['India', True],
+    ('00 13 * * mon,tue,wed,thu,fri', 'staffingapp.cron.send_daily_bdm_jobs_summary_report', ['India', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
 
     # Daily report for US
-    ('30 6 * * tue,wed,thu,fri,sat', 'staffingapp.cron.generate_daily_submission_report_for_recruiter', ['US', True],
+    ('00 2 * * tue,wed,thu,fri,sat', 'staffingapp.cron.generate_daily_submission_report_for_recruiter', ['US', True],
      {'delay': 4},
      '>> /var/log/scheduled_job.log'),
-    ('31 6 * * tue,wed,thu,fri,sat', 'staffingapp.cron.generate_daily_job_report_for_bdm', ['US', True], {'delay': 4},
+    ('01 2 * * tue,wed,thu,fri,sat', 'staffingapp.cron.generate_daily_job_report_for_bdm', ['US', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
-    ('32 6 * * tue,wed,thu,fri,sat', 'staffingapp.cron.generate_daily__recruiter_summary_report', ['US', True], {'delay': 4},
+    ('02 2 * * tue,wed,thu,fri,sat', 'staffingapp.cron.generate_daily__recruiter_summary_report', ['US', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
     #('00 5 * * tue,wed,thu,fri,sat', 'staffingapp.cron.generate_bdm_daily_submission_report', ['US', True],
     # {'delay': 4}, '>> /var/log/scheduled_job.log'),
-    ('05 17 * * wed,fri', 'staffingapp.cron.generate_send_weekly_recruiter_submission_follow_up', ['US', True],
+    ('05 13 * * wed,fri', 'staffingapp.cron.generate_send_weekly_recruiter_submission_follow_up', ['US', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
-    ('01 3 * * mon,tue,wed,thu,fri', 'staffingapp.cron.send_daily_bdm_jobs_summary_report', ['US', True],
+    ('30 22 * * mon,tue,wed,thu,fri', 'staffingapp.cron.send_daily_bdm_jobs_summary_report', ['US', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
 
     # Weekly report for India
-    ('30 22 * * sat', 'staffingapp.cron.sendmail_for_weekly_recuiter_performance_report', ['India', True], {'delay': 4},
+    ('00 18 * * sat', 'staffingapp.cron.sendmail_for_weekly_recuiter_performance_report', ['India', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
-    ('31 22 * * sat', 'staffingapp.cron.sendmail_for_weekly_recruiter_submission', ['India', True], {'delay': 4},
+    ('01 18 * * sat', 'staffingapp.cron.sendmail_for_weekly_recruiter_submission', ['India', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
-    ('32 22 * * sat', 'staffingapp.cron.sendmail_for_weekly_bdm_jobs', ['India', True], {'delay': 4},
+    ('02 18 * * sat', 'staffingapp.cron.sendmail_for_weekly_bdm_jobs', ['India', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
-    ('33 22 * * sat', 'staffingapp.cron.send_weekly_bdm_jobs_summary_report', ['India', True], {'delay': 4},
+    ('03 18 * * sat', 'staffingapp.cron.send_weekly_bdm_jobs_summary_report', ['India', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
 
     # weekly report for US
-    ('30 6 * * sun', 'staffingapp.cron.sendmail_for_weekly_recuiter_performance_report', ['US', True], {'delay': 4},
+    ('00 2 * * sun', 'staffingapp.cron.sendmail_for_weekly_recuiter_performance_report', ['US', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
-    ('31 6 * * sun', 'staffingapp.cron.sendmail_for_weekly_recruiter_submission', ['US', True], {'delay': 4},
+    ('01 2 * * sun', 'staffingapp.cron.sendmail_for_weekly_recruiter_submission', ['US', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
-    ('31 6 * * sun', 'staffingapp.cron.sendmail_for_weekly_bdm_jobs', ['US', True], {'delay': 4},
+    ('02 2 * * sun', 'staffingapp.cron.sendmail_for_weekly_bdm_jobs', ['US', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
-    ('32 6 * * sun', 'staffingapp.cron.send_weekly_bdm_jobs_summary_report', ['US', True], {'delay': 4},
+    ('03 2 * * sun', 'staffingapp.cron.send_weekly_bdm_jobs_summary_report', ['US', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
     # Parse call data
-    ('30 9 * * mon,tue,wed,thu,fri,sat', 'staffingapp.cron.parse_recruiter_calls_data_jobs', ['India', True],
+    ('00 5 * * mon,tue,wed,thu,fri,sat', 'staffingapp.cron.parse_recruiter_calls_data_jobs', ['India', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
 ]
 
@@ -318,6 +318,7 @@ CORS_ORIGIN_WHITELIST = [
      'https://staff.opallius.com',
      'http://164.68.100.175:4202',
      'https://staging.opallius.com',
+     'http://localhost:55850',
  ]
 
 
