@@ -7547,7 +7547,7 @@ def send_daily_bdm_jobs_summary(country='India', isProd=False):
         else:
             email.cc = ['mathurp@opallios.com']"""
 
-        email.cc = ['mathurp@opallios.com']
+        email.cc = ['singha@cresitatech.com']
         email.send()
         logger.info('Email Send Successfully !!!!!!!!')
         # return render(request, "bdm_daily_jobs_summary_report.html",

@@ -101,10 +101,10 @@ class RecommendedCandidatesViewSet(viewsets.ModelViewSet):
             print("Oops! Error occurred. File not formated.")
 
         logger.info("jobdesc: ===== " + str(text))
-        df = pd.read_csv("/home/admin/projectDir/staffingapp/static/cleaned_resume_4731.csv")
+        df = pd.read_csv("/var/www/staffing_backend/static/cleaned_resume_4731.csv")
 
         # loaded_model = pickle.load(open("/home/admin/projectDir/staffingapp/static/candidates-embedding.pkl", 'rb'))
-        loaded_model = pickle.load(open("/home/admin/projectDir/staging/staffingapp/static/candidates-embedding.pkl", 'rb'))
+        loaded_model = pickle.load(open("/var/www/staffing_backend/static/candidates-embedding.pkl", 'rb'))
         # listing out the first 5 rows of the data set
         sen = [text]
         model = SentenceTransformer('bert-base-nli-mean-tokens')

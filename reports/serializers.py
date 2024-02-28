@@ -1217,6 +1217,7 @@ class AssingedDashboardListSerializer(serializers.ModelSerializer):
     secondary_recruiter_name = serializers.CharField(read_only=True)
     assignee_name = serializers.CharField(read_only=True)
     posted_date = serializers.CharField(read_only=True)
+    client_name = serializers.CharField(read_only=True)
 
     class Meta:
         model = jobModel
