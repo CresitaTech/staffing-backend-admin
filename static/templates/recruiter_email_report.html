@@ -70,14 +70,16 @@
                     <td>
                         <table width="100%" cellspacing="0" cellpedding="0" border="0"  class="table">
                             <tr>
-                                <th style="color: #f20e0e; padding-bottom:10px; ">Recruiter Name</th>
+                                <th style="color: #f20e0e; padding-bottom:10px; ">Recruiter</th>
                                 <th style="color: #f20e0e; padding-bottom:10px;">Submissions</th>
+                                <th style="color: #f20e0e; padding-bottom:10px; ">Attempted Calls</th>
                             </tr>
 							{% if no_submission|length %}
 							{% for item in no_submission %} 
                             <tr> 
-                                <td style="color: #f20e0e; padding-bottom:10px;">{{item}}</td>
+                                <td style="color: #f20e0e; padding-bottom:10px;">{{item.first_name}}</td>
                                 <td style="color: #f20e0e; padding-bottom:10px;">0</td>
+                                <td style="color: #f20e0e; padding-bottom:10px;">{{item.attempted_calls}}</td>
                             </tr>  
                           
 							{% endfor %} 
