@@ -4873,51 +4873,51 @@ class JobsDashboardList(generics.ListAPIView):
             logger.info('RM Jobs dashboard query: ' + str(queryset.query))
 
         elif userGroup is not None and userGroup == GLOBAL_ROLE.get('RECRUITER'):
-            # queryset = jobModel.objects.raw(
-            #     "SELECT j.id, j.created_at as posted_date , j.status, j.job_title, (SELECT COUNT(*) FROM candidates_stages as s , candidates_jobs_stages as cjs , osms_candidates as ca WHERE cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND "
-            #     "ca.created_by_id = %s AND cjs.job_description_id = j.id AND s.stage_name != 'Candidate Added') as total_submissions , (SELECT COUNT(*) FROM candidates_stages as s , candidates_jobs_stages as cjs , osms_candidates as ca WHERE cjs.stage_id = s.id AND "
-            #     "cjs.candidate_name_id = ca.id AND ca.created_by_id = %s AND cjs.job_description_id = j.id AND s.stage_name = 'Placed') as placed , cl.company_name, CONCAT (u.first_name ,' ', u.last_name) as bdm_name,ja.assignee_name, ja.created_at as assinged_date "
-            #     "FROM `osms_job_description` as j, `osms_clients` as cl, `users_user` as u, `job_description_assingment` as ja WHERE (j.client_name_id = cl.id AND u.id = j.created_by_id AND ja.job_id_id = j.id AND ja.primary_recruiter_name_id = %s) OR"
-            #     "(j.client_name_id = cl.id AND u.id = j.created_by_id AND ja.job_id_id = j.id AND ja.secondary_recruiter_name_id = %s) ORDER BY assinged_date DESC",
-            #     [uid, uid, uid, uid])
+            queryset = jobModel.objects.raw(
+                "SELECT j.id, j.created_at as posted_date , j.status, j.job_title, (SELECT COUNT(*) FROM candidates_stages as s , candidates_jobs_stages as cjs , osms_candidates as ca WHERE cjs.stage_id = s.id AND cjs.candidate_name_id = ca.id AND "
+                "ca.created_by_id = %s AND cjs.job_description_id = j.id AND s.stage_name != 'Candidate Added') as total_submissions , (SELECT COUNT(*) FROM candidates_stages as s , candidates_jobs_stages as cjs , osms_candidates as ca WHERE cjs.stage_id = s.id AND "
+                "cjs.candidate_name_id = ca.id AND ca.created_by_id = %s AND cjs.job_description_id = j.id AND s.stage_name = 'Placed') as placed , cl.company_name, CONCAT (u.first_name ,' ', u.last_name) as bdm_name,ja.assignee_name, ja.created_at as assinged_date "
+                "FROM `osms_job_description` as j, `osms_clients` as cl, `users_user` as u, `job_description_assingment` as ja WHERE (j.client_name_id = cl.id AND u.id = j.created_by_id AND ja.job_id_id = j.id AND ja.primary_recruiter_name_id = %s) OR"
+                "(j.client_name_id = cl.id AND u.id = j.created_by_id AND ja.job_id_id = j.id AND ja.secondary_recruiter_name_id = %s) ORDER BY assinged_date DESC",
+                [uid, uid, uid, uid])
             
-            query = """
-                SELECT 
-                    j.id, 
-                    j.created_at AS posted_date, 
-                    j.status, 
-                    j.job_title, 
-                    (
-                        SELECT COUNT(*) 
-                        FROM candidates_stages AS s 
-                        INNER JOIN candidates_jobs_stages AS cjs ON s.id = cjs.stage_id 
-                        INNER JOIN osms_candidates AS ca ON cjs.candidate_name_id = ca.id 
-                        WHERE cjs.job_description_id = j.id 
-                            AND ca.created_by_id = %s 
-                            AND s.stage_name != 'Candidate Added'
-                    ) AS total_submissions,
-                    (
-                        SELECT COUNT(*) 
-                        FROM candidates_stages AS s 
-                        INNER JOIN candidates_jobs_stages AS cjs ON s.id = cjs.stage_id 
-                        INNER JOIN osms_candidates AS ca ON cjs.candidate_name_id = ca.id 
-                        WHERE cjs.job_description_id = j.id 
-                            AND ca.created_by_id = %s 
-                            AND s.stage_name = 'Placed'
-                    ) AS placed,
-                    cl.company_name, 
-                    CONCAT(u.first_name, ' ', u.last_name) AS bdm_name,
-                    ja.assignee_name, 
-                    ja.created_at AS assinged_date
-                FROM osms_job_description AS j
-                INNER JOIN osms_clients AS cl ON j.client_name_id = cl.id
-                INNER JOIN users_user AS u ON u.id = j.created_by_id
-                INNER JOIN job_description_assingment AS ja ON ja.job_id_id = j.id
-                WHERE 
-                    (ja.primary_recruiter_name_id = %s OR ja.secondary_recruiter_name_id = %s)
-                ORDER BY assinged_date DESC
-            """
-            queryset = jobModel.objects.raw(query, [uid, uid, uid, uid])
+            # query = """
+            #     SELECT 
+            #         j.id, 
+            #         j.created_at AS posted_date, 
+            #         j.status, 
+            #         j.job_title, 
+            #         (
+            #             SELECT COUNT(*) 
+            #             FROM candidates_stages AS s 
+            #             INNER JOIN candidates_jobs_stages AS cjs ON s.id = cjs.stage_id 
+            #             INNER JOIN osms_candidates AS ca ON cjs.candidate_name_id = ca.id 
+            #             WHERE cjs.job_description_id = j.id 
+            #                 AND ca.created_by_id = %s 
+            #                 AND s.stage_name != 'Candidate Added'
+            #         ) AS total_submissions,
+            #         (
+            #             SELECT COUNT(*) 
+            #             FROM candidates_stages AS s 
+            #             INNER JOIN candidates_jobs_stages AS cjs ON s.id = cjs.stage_id 
+            #             INNER JOIN osms_candidates AS ca ON cjs.candidate_name_id = ca.id 
+            #             WHERE cjs.job_description_id = j.id 
+            #                 AND ca.created_by_id = %s 
+            #                 AND s.stage_name = 'Placed'
+            #         ) AS placed,
+            #         cl.company_name, 
+            #         CONCAT(u.first_name, ' ', u.last_name) AS bdm_name,
+            #         ja.assignee_name, 
+            #         ja.created_at AS assinged_date
+            #     FROM osms_job_description AS j
+            #     INNER JOIN osms_clients AS cl ON j.client_name_id = cl.id
+            #     INNER JOIN users_user AS u ON u.id = j.created_by_id
+            #     INNER JOIN job_description_assingment AS ja ON ja.job_id_id = j.id
+            #     WHERE 
+            #         (ja.primary_recruiter_name_id = %s OR ja.secondary_recruiter_name_id = %s)
+            #     ORDER BY assinged_date DESC
+            # """
+            # queryset = jobModel.objects.raw(query, [uid, uid, uid, uid])
             logger.info('Recr Jobs dashboard query: ' + str(queryset.query))
 
         serializer = ClientDashboardListSerializer(queryset, many=True)
