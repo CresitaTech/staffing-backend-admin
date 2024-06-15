@@ -4882,42 +4882,40 @@ class JobsDashboardList(generics.ListAPIView):
             #     [uid, uid, uid, uid])
             
             query = """
-                SELECT 
-                    j.id, 
-                    j.created_at AS posted_date, 
-                    j.status, 
-                    j.job_title, 
-                    (
-                        SELECT COUNT(*) 
-                        FROM candidates_stages AS s 
-                        INNER JOIN candidates_jobs_stages AS cjs ON s.id = cjs.stage_id 
-                        INNER JOIN osms_candidates AS ca ON cjs.candidate_name_id = ca.id 
-                        WHERE cjs.job_description_id = j.id 
-                            AND ca.created_by_id = %s 
-                            AND s.stage_name != 'Candidate Added'
-                    ) AS total_submissions,
-                    (
-                        SELECT COUNT(*) 
-                        FROM candidates_stages AS s 
-                        INNER JOIN candidates_jobs_stages AS cjs ON s.id = cjs.stage_id 
-                        INNER JOIN osms_candidates AS ca ON cjs.candidate_name_id = ca.id 
-                        WHERE cjs.job_description_id = j.id 
-                            AND ca.created_by_id = %s 
-                            AND s.stage_name = 'Placed'
-                    ) AS placed,
-                    cl.company_name, 
+                SELECT
+                    j.id,
+                    j.created_at AS posted_date,
+                    j.status,
+                    j.job_title,
+                    COUNT(CASE WHEN s.stage_name != 'Candidate Added' THEN cjs.candidate_name_id END) AS total_submissions,
+                    COUNT(CASE WHEN s.stage_name = 'Placed' THEN cjs.candidate_name_id END) AS placed,
+                    cl.company_name,
                     CONCAT(u.first_name, ' ', u.last_name) AS bdm_name,
-                    ja.assignee_name, 
+                    ja.assignee_name,
                     ja.created_at AS assinged_date
-                FROM osms_job_description AS j
-                INNER JOIN osms_clients AS cl ON j.client_name_id = cl.id
-                INNER JOIN users_user AS u ON u.id = j.created_by_id
-                INNER JOIN job_description_assingment AS ja ON ja.job_id_id = j.id
-                WHERE 
+                FROM
+                    osms_job_description AS j
+                JOIN
+                    osms_clients AS cl ON j.client_name_id = cl.id
+                JOIN
+                    users_user AS u ON u.id = j.created_by_id
+                JOIN
+                    job_description_assingment AS ja ON ja.job_id_id = j.id
+                LEFT JOIN
+                    candidates_jobs_stages AS cjs ON cjs.job_description_id = j.id
+                LEFT JOIN
+                    candidates_stages AS s ON cjs.stage_id = s.id
+                LEFT JOIN
+                    osms_candidates AS ca ON cjs.candidate_name_id = ca.id
+                WHERE
                     (ja.primary_recruiter_name_id = %s OR ja.secondary_recruiter_name_id = %s)
-                ORDER BY assinged_date DESC
-            """
-            queryset = jobModel.objects.raw(query, [uid, uid, uid, uid])
+                    AND ca.created_by_id = %s
+                GROUP BY
+                    j.id, j.created_at, j.status, j.job_title, cl.company_name, u.first_name, u.last_name, ja.assignee_name, ja.created_at
+                ORDER BY
+                    assinged_date DESC"""    
+            
+            queryset = jobModel.objects.raw(query, [uid, uid, uid])
             logger.info('Recr Jobs dashboard query: ' + str(queryset.query))
 
         serializer = ClientDashboardListSerializer(queryset, many=True)
