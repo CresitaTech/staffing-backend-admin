@@ -187,6 +187,8 @@ INSTALLED_APPS = [
 }"""
 
 CRONJOBS = [
+    
+    ('*/1 * * * *', 'staffingapp.cron.send_daily_candidate_submissions_report')
     # For test health check
     # ('*/1 * * * *', 'staffingapp.cron.heartbeat_check', ['India', True], {'delay': 4}, '>> /var/log/scheduled_job.log'),
     ('00 3 * * *', 'staffingapp.cron.database_daily_backup', '>> /var/log/scheduled_job.log'),
