@@ -696,3 +696,245 @@ class tataCallsWebhook(viewsets.ModelViewSet):
         candObj = self.get_object(pk)
         serializeObj = AgentCallsDataModelSerializer(candObj)
         return Response(serializeObj.data)
+    
+    
+    
+    
+#---------------------------------------
+
+#Candidate Submission via emails
+
+import imaplib
+import email, base64
+from email.header import decode_header
+import requests, re
+from requests_toolbelt.multipart.encoder import MultipartEncoder
+
+import os
+import django
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "staffingapp.settings")
+django.setup()
+
+import email
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import requests
+
+from jobdescriptions.models import jobModel
+
+
+def extract_job_id(description):
+    # Regular expression pattern to match the Job ID
+    pattern = r"OPJDIDPM\d{18}"
+    match = re.search(pattern, description)
+    if match:
+        return match.group(0)
+    return None
+
+# Function to extract email content
+def extract_email_content(email_message):
+    candidate_info = {}
+    resume_attachment = None
+    
+    for part in email_message.walk():
+        content_type = part.get_content_type()
+        content_disposition = str(part.get("Content-Disposition"))
+        
+        if content_type == "text/plain" and "attachment" not in content_disposition:
+            body = part.get_payload(decode=True).decode()
+            lines = body.split("\n")
+            for line in lines:
+                if ":" in line:
+                    key, value = line.split(":", 1)
+                    candidate_info[key.strip()] = value.strip()
+        
+        if "attachment" in content_disposition:
+            filename = part.get_filename()
+            if filename:
+                resume_attachment = part.get_payload(decode=True)
+    print("caninfo", candidate_info, resume_attachment)
+    
+    return candidate_info, resume_attachment
+
+
+
+# Function to send email notification
+def send_email_notification(sender_email, subject, body):
+    smtp_server = "smtp.gmail.com"
+    smtp_port = 587
+    smtp_username = "devdroplets10@gmail.com"
+    smtp_password = "ferb gzuy zefz udcx"
+
+    msg = MIMEMultipart()
+    msg['From'] = smtp_username
+    msg['To'] = sender_email
+    msg['Subject'] = subject
+
+    # Create HTML content for the email body
+    html = f"""
+    <html>
+        <body style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2 style="color: #333;">Candidate Submission Notification</h2>
+            <p>{body}</p>
+            <p style="color: #888;">This is an automated email from ATS Support Team, please do not reply.</p>
+        </body>
+    </html>
+    """
+
+    # Attach HTML content to the email
+    msg.attach(MIMEText(html, 'html'))
+
+    try:
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(smtp_username, smtp_password)
+        text = msg.as_string()
+        server.sendmail(smtp_username, sender_email, text)
+        server.quit()
+        print(f"Notification email sent to {sender_email}")
+    except Exception as e:
+        print(f"Failed to send notification email to {sender_email}: {str(e)}")
+
+
+# Function to submit candidate data
+def submit_candidate_data(candidate_info, resume_attachment, sender_email):
+    print("frommail",  sender_email)
+    
+    # Missing fields based validation
+    required_fields = ["First Name", "Last Name", "Primary Email", "Primary Phone Number",
+                       "Currency (USD/INR)", "Job Description", "Designation", "Min Salary", 
+                       "Max Salary", "Total Experience", "Country", "Submission Date"]
+    
+    for field in required_fields:
+        if not candidate_info.get(field):
+            print(f"Missing required field: {field}")
+            send_email_notification(sender_email, "Candidate Submission Failed", 
+                                    f"Missing required field: {field}")
+            return
+    
+    # Check for resume attachment
+    if not resume_attachment:
+        print("Resume attachment is missing")
+        send_email_notification(sender_email, "Candidate Submission Failed", 
+                                "Resume attachment is missing")
+        return
+    
+     
+    print("ccinfo", candidate_info)
+    api_url = "https://stagingapiserver.opallius.com/api/candidates/candidate/"
+    
+    job_desc = candidate_info.get("Job Description")
+    Remarks = candidate_info.get("Remarks")
+    JOB_ID = extract_job_id(job_desc)
+    job_description= jobModel.objects.filter(job_id = JOB_ID).first()
+    job_description_idd = str(job_description.id) 
+    job_descriptions = [
+    {
+        "job": str(job_description_idd),
+        "jd_name": str(job_desc),
+        "stage_name": "Candidate Added",
+        "status": "6bef7192-0104-4e31-bff1-6948707fdc88",
+        "submission_date": "2024-06-18",
+        "send_out_date": "",
+        "display_date": "2024-06-18",
+        "notes": " ",
+        "remarks": Remarks if Remarks else " ",
+    }
+    ]
+    
+    print("Job Descriptionn", job_descriptions)
+    
+    designation_name = candidate_info.get("Designation")
+    from candidates.models import designationModel
+    designation_obj = designationModel.objects.filter(name=designation_name).first()
+    desig_id = str(designation_obj.id) if designation_obj else None 
+    print("Designationnnn", designation_obj.id)
+    if not designation_obj:
+        print("No designation found")
+    
+    payload = {
+        "first_name": candidate_info.get("First Name"),
+        "last_name": candidate_info.get("Last Name"),
+        "primary_email": candidate_info.get("Primary Email"),
+        "primary_phone_number": candidate_info.get("Primary Phone Number"),
+        "currency": candidate_info.get("Currency (USD/INR)"),
+        "isSalary" : "Yes",
+        "job_description": str(job_description_idd),
+        "designation": str(desig_id),
+        "min_salary": candidate_info.get("Min Salary"),
+        "max_salary": candidate_info.get("Max Salary"),
+        "job_descriptions": str(job_descriptions),
+        "total_experience": candidate_info.get("Total Experience"),
+        "country": candidate_info.get("Country"),
+        "submission_date": candidate_info.get("Submission Date"),
+        "stage_name" : "6bef7192-0104-4e31-bff1-6948707fdc88",
+    }
+    
+    # Send the POST request with payload and file path to the resume
+    from io import BytesIO
+    files = {
+        'resume': ('resume.pdf', BytesIO(resume_attachment), 'application/pdf'),
+    }
+    headers = {
+    "Authorization": "Token c629a5aec25b5a40f050416cc0b63a834f4c81da",
+    }
+
+    response = requests.post(api_url, data=payload, files=files, headers=headers)
+    print("API Response:", response.text)
+
+    if response.status_code == 201:
+        print("Candidate data submitted successfully!")
+        send_email_notification(sender_email, "Candidate Submission Successfully", 
+                                "Candidate has been submitted successfully!")
+    # elif response.status_code == 400: 
+    #     error_message = response.json()  # Extract error message from API response
+    #     print(f"Failed to submit candidate data. Status code: {response.status_code}")
+    #     print("Error message:", error_message)
+    #     send_api_error_notification(sender_email, "Candidate Submission Failed", str(error_message))
+    else:
+        send_email_notification(sender_email, "Candidate Submission Failed",  "Please check the requird fields carefully!")
+        print(f"Failed to submit candidate data. Status code: {response.status_code}")
+        print("Error message:", response.text)
+
+
+
+# # Logout from the email server
+# mail.logout()
+
+#----------------------------------------------------------------
+# Connect to the email server
+mail = imaplib.IMAP4_SSL("imap.gmail.com")
+username = "devdroplets10@gmail.com"
+password = "ferb gzuy zefz udcx"
+mail.login(username, password)
+mail.select("inbox")
+
+# Search for unread emails
+status, messages = mail.search(None, 'UNSEEN')
+email_ids = messages[0].split()
+
+
+# Process each unread email
+
+def EmailCandidateSubmission():
+    for email_id in email_ids:
+        status, msg_data = mail.fetch(email_id, "(RFC822)")
+        msg = email.message_from_bytes(msg_data[0][1])
+        sender_email = msg["From"]
+        candidate_info, resume_attachment = extract_email_content(msg)
+        
+        if candidate_info:
+            submit_candidate_data(candidate_info, resume_attachment, sender_email)
+        
+        # Mark the email as read
+        mail.store(email_id, '+FLAGS', '\\Seen')
+    
+    
+    
+    
+    
+
+
+
