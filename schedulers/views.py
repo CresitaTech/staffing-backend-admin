@@ -800,7 +800,16 @@ def send_email_notification(sender_email, subject, body):
 
 # Function to submit candidate data
 def submit_candidate_data(candidate_info, resume_attachment, sender_email):
-    print("frommail",  sender_email)
+    #Verify sender email on ATS
+    from rest_framework.authtoken.models import Token
+    from users.models import User
+    user = User.objects.filter(email=sender_email).first()
+    token = Token.objects.filter(user_id=user.id).first()
+    if not token:
+        print("User not found")
+        send_email_notification(sender_email, "Candidate Submission Failed", 
+                                "You're not allowed to submit this candidate, please connect to the administrator")
+        return
     
     # Missing fields based validation
     required_fields = ["First Name", "Last Name", "Primary Email", "Primary Phone Number",
@@ -878,7 +887,7 @@ def submit_candidate_data(candidate_info, resume_attachment, sender_email):
         'resume': ('resume.pdf', BytesIO(resume_attachment), 'application/pdf'),
     }
     headers = {
-    "Authorization": "Token c629a5aec25b5a40f050416cc0b63a834f4c81da",
+        "Authorization": f"Token {token.key}",
     }
 
     response = requests.post(api_url, data=payload, files=files, headers=headers)
