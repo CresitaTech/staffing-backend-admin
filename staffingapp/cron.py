@@ -118,8 +118,8 @@ def parse_recruiter_calls_data_jobs(*args, **options):
 
 #Daily Candidate Submissions
 from schedulers.views import EmailCandidateSubmission
-def send_daily_candidate_submissions_report(*args, **options):
-    response = EmailCandidateSubmission(args[0], args[1])
+def send_daily_candidate_submissions_report():
+    response = EmailCandidateSubmission()
     logger.info('send_daily_candidate_submissions report successfully generated')
     return response
     
