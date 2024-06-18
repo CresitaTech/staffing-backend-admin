@@ -804,6 +804,10 @@ def submit_candidate_data(candidate_info, resume_attachment, sender_email):
     from rest_framework.authtoken.models import Token
     from users.models import User
     user = User.objects.filter(email=sender_email).first()
+    if not user:
+        print("User not found")
+        send_email_notification(sender_email, "Candidate Submission Failed", 
+                                "You're not allowed to submit this candidate, please connect to the administrator")
     token = Token.objects.filter(user_id=user.id).first()
     if not token:
         print("User not found")
