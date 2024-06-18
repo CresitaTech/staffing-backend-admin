@@ -187,31 +187,28 @@ INSTALLED_APPS = [
 }"""
 
 CRONJOBS = [
-    
-    ('*/1 * * * *', 'staffingapp.cron.send_daily_candidate_submissions_report')
     # For test health check
     # ('*/1 * * * *', 'staffingapp.cron.heartbeat_check', ['India', True], {'delay': 4}, '>> /var/log/scheduled_job.log'),
-    ('00 3 * * *', 'staffingapp.cron.database_daily_backup', '>> /var/log/scheduled_job.log'),
+    ('01 3 * * *', 'staffingapp.cron.database_daily_backup', '>> /var/log/scheduled_job.log'),
     # Daily report for India
-    (
-    '00 18 * * mon,tue,wed,thu,fri', 'staffingapp.cron.generate_daily_submission_report_for_recruiter', ['India', True],
+    ('01 18 * * mon,tue,wed,thu,fri', 'staffingapp.cron.generate_daily_submission_report_for_recruiter', ['India', True],
     {'delay': 4}, '>> /var/log/scheduled_job.log'),
-    ('01 18 * * mon,tue,wed,thu,fri', 'staffingapp.cron.generate_daily_job_report_for_bdm', ['India', True],
+    ('02 18 * * mon,tue,wed,thu,fri', 'staffingapp.cron.generate_daily_job_report_for_bdm', ['India', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
-    ('02 18 * * mon,tue,wed,thu,fri', 'staffingapp.cron.generate_daily__recruiter_summary_report', ['India', True],
+    ('03 18 * * mon,tue,wed,thu,fri', 'staffingapp.cron.generate_daily__recruiter_summary_report', ['India', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
 
-    ('00 5 * * mon,tue,wed,thu,fri,sat', 'staffingapp.cron.sendmail_last_48hours_bdm_jobs', ['India', True],
+    ('01 5 * * mon,tue,wed,thu,fri,sat', 'staffingapp.cron.sendmail_last_48hours_bdm_jobs', ['India', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
     #('30 18 * * mon,tue,wed,thu,fri,sat', 'staffingapp.cron.generate_bdm_daily_submission_report', ['India', True],
     # {'delay': 4}, '>> /var/log/scheduled_job.log'),
-    ('00 13 * * wed,fri', 'staffingapp.cron.generate_send_weekly_recruiter_submission_follow_up', ['India', True],
+    ('01 13 * * wed,fri', 'staffingapp.cron.generate_send_weekly_recruiter_submission_follow_up', ['India', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
-    ('00 13 * * mon,tue,wed,thu,fri', 'staffingapp.cron.send_daily_bdm_jobs_summary_report', ['India', True],
+    ('01 13 * * mon,tue,wed,thu,fri', 'staffingapp.cron.send_daily_bdm_jobs_summary_report', ['India', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
 
     # Daily report for US
-    ('00 2 * * tue,wed,thu,fri,sat', 'staffingapp.cron.generate_daily_submission_report_for_recruiter', ['US', True],
+    ('01 2 * * tue,wed,thu,fri,sat', 'staffingapp.cron.generate_daily_submission_report_for_recruiter', ['US', True],
      {'delay': 4},
      '>> /var/log/scheduled_job.log'),
     ('01 2 * * tue,wed,thu,fri,sat', 'staffingapp.cron.generate_daily_job_report_for_bdm', ['US', True], {'delay': 4},
@@ -226,7 +223,7 @@ CRONJOBS = [
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
 
     # Weekly report for India
-    ('00 18 * * sat', 'staffingapp.cron.sendmail_for_weekly_recuiter_performance_report', ['India', True], {'delay': 4},
+    ('01 18 * * sat', 'staffingapp.cron.sendmail_for_weekly_recuiter_performance_report', ['India', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
     ('01 18 * * sat', 'staffingapp.cron.sendmail_for_weekly_recruiter_submission', ['India', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
@@ -236,7 +233,7 @@ CRONJOBS = [
      '>> /var/log/scheduled_job.log'),
 
     # weekly report for US
-    ('00 2 * * sun', 'staffingapp.cron.sendmail_for_weekly_recuiter_performance_report', ['US', True], {'delay': 4},
+    ('01 2 * * sun', 'staffingapp.cron.sendmail_for_weekly_recuiter_performance_report', ['US', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
     ('01 2 * * sun', 'staffingapp.cron.sendmail_for_weekly_recruiter_submission', ['US', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
@@ -245,10 +242,9 @@ CRONJOBS = [
     ('03 2 * * sun', 'staffingapp.cron.send_weekly_bdm_jobs_summary_report', ['US', True], {'delay': 4},
      '>> /var/log/scheduled_job.log'),
     # Parse call data
-    ('00 5 * * mon,tue,wed,thu,fri,sat', 'staffingapp.cron.parse_recruiter_calls_data_jobs', ['India', True],
+    ('01 5 * * mon,tue,wed,thu,fri,sat', 'staffingapp.cron.parse_recruiter_calls_data_jobs', ['India', True],
      {'delay': 4}, '>> /var/log/scheduled_job.log'),
 ]
-
 CREDENTIALS_FILE = os.path.join(BASE_DIR, 'client_id.json')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
